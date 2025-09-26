@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Votación – USTA (FINAL)</title>
 
+  <!-- Anti-FOUC: aplica tema antes de cargar Tailwind -->
+  <script>
+    (function() {
+      try {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const useDark = saved ? (saved === 'dark') : prefersDark;
+        const root = document.documentElement;
+        if (useDark) {
+          root.classList.add('dark');
+          root.style.setProperty('color-scheme', 'dark');
+        } else {
+          root.classList.remove('dark');
+          root.style.setProperty('color-scheme', 'light');
+        }
+      } catch (_) {}
+    })();
+  </script>
+
   <!-- Tailwind por CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
@@ -129,7 +148,7 @@
       </div>
 
       <!-- Último acuse rápido -->
-      <div id="lastVote" class="mt-4 text-xs text-slate-500 dark:text-slate-400 hidden"></div>
+      <div id="lastVote" class="mt-4 text-xs text-slate-500 dark:text-slate-4 hidden"></div>
     </section>
   </main>
 
@@ -141,20 +160,21 @@
     </div>
   </footer>
 
-  <!-- Lógica: usa utilidades exportadas de script.js si están disponibles; si no, define fallback -->
+  <!-- Lógica principal: usa utilidades exportadas de script.js -->
   <script type="module">
-    // --- Import dinámico de utilidades compartidas (si el script.js las expone como módulo)
+    // --- Import dinámico de utilidades compartidas
     let sha256, getVotes, setVotes;
     const ELECTION_ID = 'CE-2025';
     const LS_VOTES = `votes_${ELECTION_ID}`; // [{email, candidato, hash_anonimo, ts}]
 
     try {
+      // Importa el módulo (esto también inicializa y enlaza el tema persistente)
       const mod = await import('./script.js');
       sha256 = mod.sha256;
       getVotes = mod.getVotes;
       setVotes = mod.setVotes;
     } catch (e) {
-      // Fallback local si no existe módulo (mantiene la página autosuficiente)
+      // Fallback local si no existe módulo: mantiene la cabina autosuficiente
       sha256 = async function(text) {
         const data = new TextEncoder().encode(text);
         const hash = await crypto.subtle.digest('SHA-256', data);
@@ -162,11 +182,20 @@
       };
       getVotes = function() { return JSON.parse(localStorage.getItem(LS_VOTES) || '[]'); };
       setVotes = function(arr) { localStorage.setItem(LS_VOTES, JSON.stringify(arr)); };
+
+      // Pequeña inicialización de tema en fallback
+      (function () {
+        const root = document.documentElement;
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+        const useDark = saved ? (saved === 'dark') : prefersDark;
+        root.classList.toggle('dark', useDark);
+        root.style.setProperty('color-scheme', useDark ? 'dark' : 'light');
+      })();
     }
 
     // --- Helpers de UI ---
     const $ = (sel) => document.querySelector(sel);
-    const $$ = (sel) => document.querySelectorAll(sel);
     const voteForm   = $('#voteForm');
     const statusMsg  = $('#statusMsg');
     const spinner    = $('#spinner');
@@ -175,17 +204,8 @@
     const confirmYes = $('#confirmYes');
     const lastVoteEl = $('#lastVote');
     const yearSpan   = $('#year');
-    const themeBtn   = $('#themeBtn');
 
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-
-    // Tema mínimo (por si el index maneja persistencia)
-    themeBtn?.addEventListener('click', () => {
-      const root = document.documentElement;
-      const isDark = document.body.classList.toggle('dark');
-      root.style.setProperty('color-scheme', isDark ? 'dark' : 'light');
-      themeBtn.setAttribute('aria-pressed', String(isDark));
-    });
 
     function showStatus(msg, ok=true) {
       statusMsg.textContent = msg;
