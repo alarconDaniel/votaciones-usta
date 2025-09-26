@@ -1,13 +1,13 @@
-// DEV – HU01/HU02 login/registro (demo) + bloqueo
+// DEV – Voto con confirmación, hash y antidoble voto
 const themeBtn = document.getElementById('themeBtn');
 const root = document.documentElement;
 const statusMsg = document.getElementById('statusMsg');
 const contactForm = document.getElementById('contactForm');
 const voteForm = document.getElementById('voteForm');
-const registerForm = document.getElementById('registerForm');
-const regMsg = document.getElementById('regMsg');
-const loginForm = document.getElementById('loginForm');
-const loginMsg = document.getElementById('loginMsg');
+const confirmDlg = document.getElementById('confirmDlg');
+const confirmText = document.getElementById('confirmText');
+const confirmYes = document.getElementById('confirmYes');
+const lastVote = document.getElementById('lastVote');
 const yearSpan = document.getElementById('year');
 if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
@@ -22,67 +22,7 @@ themeBtn?.addEventListener('click', () => {
   }
 });
 
-// Helpers de almacenamiento demo
-const LS_USERS = 'demo_users';
-const LS_LOGIN_FAILS = 'demo_login_fails';
-const users = JSON.parse(localStorage.getItem(LS_USERS) || '[]');
-const loginFails = JSON.parse(localStorage.getItem(LS_LOGIN_FAILS) || '{}');
-
-function saveUsers() { localStorage.setItem(LS_USERS, JSON.stringify(users)); }
-function saveLoginFails() { localStorage.setItem(LS_LOGIN_FAILS, JSON.stringify(loginFails)); }
-
-function isInstitutional(email) {
-  return typeof email === 'string' && email.toLowerCase().endsWith('@usta.edu.co');
-}
-
-// Registro (demo)
-registerForm?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(registerForm).entries());
-  if (!isInstitutional(data.email)) {
-    regMsg.textContent = 'Error: use su correo institucional @usta.edu.co';
-    regMsg.className = 'mt-2 text-sm text-red-700';
-    return;
-  }
-  if (users.find(u => u.email === data.email)) {
-    regMsg.textContent = 'Ese correo ya está registrado (demo).';
-    regMsg.className = 'mt-2 text-sm text-red-700';
-    return;
-  }
-  users.push({ id: data.identificacion, email: data.email, pw: data.password });
-  saveUsers();
-  regMsg.textContent = 'Cuenta creada. Revise su correo (simulado) para activación.';
-  regMsg.className = 'mt-2 text-sm text-green-700';
-  registerForm.reset();
-});
-
-// Login (demo) + bloqueo 3 intentos
-loginForm?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(loginForm).entries());
-  const u = users.find(u => u.email === data.email);
-  const k = data.email || 'anon';
-  loginFails[k] = loginFails[k] || { fails: 0, blocked: false };
-  if (loginFails[k].blocked) {
-    loginMsg.textContent = 'Cuenta bloqueada por intentos fallidos (demo).';
-    loginMsg.className = 'mt-2 text-sm text-red-700';
-    return;
-  }
-  if (!u || u.pw !== data.password) {
-    loginFails[k].fails += 1;
-    if (loginFails[k].fails >= 3) loginFails[k].blocked = true;
-    saveLoginFails();
-    loginMsg.textContent = `Credenciales inválidas. Intentos: ${loginFails[k].fails}/3`;
-    loginMsg.className = 'mt-2 text-sm text-red-700';
-    return;
-  }
-  loginFails[k] = { fails: 0, blocked: false };
-  saveLoginFails();
-  loginMsg.textContent = 'Inicio de sesión correcto (demo).';
-  loginMsg.className = 'mt-2 text-sm text-green-700';
-});
-
-// Contacto (demo)
+// contacto
 contactForm?.addEventListener('submit', (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(contactForm).entries());
@@ -91,14 +31,79 @@ contactForm?.addEventListener('submit', (e) => {
   contactForm.reset();
 });
 
-// Voto (demo, sin hash aún)
-voteForm?.addEventListener('submit', (e) => {
+// Utilidades de “elección” (demo)
+const ELECTION_ID = 'CE-2025';
+const LS_VOTES = `votes_${ELECTION_ID}`;
+const LS_LOGS = 'audit_logs_demo';
+
+function logEvent(accion, detalle='') {
+  const logs = JSON.parse(localStorage.getItem(LS_LOGS) || '[]');
+  logs.push({ ts: new Date().toISOString(), accion, detalle, ip: '127.0.0.1' });
+  localStorage.setItem(LS_LOGS, JSON.stringify(logs));
+}
+
+function getVotes() {
+  return JSON.parse(localStorage.getItem(LS_VOTES) || '[]');
+}
+function setVotes(arr) {
+  localStorage.setItem(LS_VOTES, JSON.stringify(arr));
+}
+
+// Hash SHA-256 de texto
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Mostrar último voto (si existe)
+(function showLastVote() {
+  const votes = getVotes();
+  const me = votes[votes.length-1];
+  if (me && lastVote) {
+    lastVote.classList.remove('hidden');
+    lastVote.textContent = `Último acuse: ${me.hash_anonimo}`;
+  }
+})();
+
+// Flujo de confirmación + registro
+voteForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(voteForm).entries());
-  const s = document.getElementById('statusMsg');
-  if (s) {
-    s.textContent = `Gracias, ${data.nombre}. Voto recibido (demo DEV).`;
-    s.className = 'mt-3 text-sm text-green-700';
+  const email = (data.email || '').toLowerCase().trim();
+  if (!email.endsWith('@usta.edu.co')) {
+    statusMsg.textContent = 'Use su correo institucional @usta.edu.co (demo).';
+    statusMsg.className = 'mt-3 text-sm text-red-700';
+    return;
   }
-  voteForm.reset();
+  // prevenir doble voto por email en esta elección
+  const votes = getVotes();
+  if (votes.some(v => v.email === email)) {
+    statusMsg.textContent = 'Error: ya existe un voto registrado para este correo en la elección actual (demo).';
+    statusMsg.className = 'mt-3 text-sm text-red-700';
+    return;
+  }
+
+  // diálogo de confirmación
+  const texto = `Confirma tu voto para **${data.candidato}**.\n\nNombre: ${data.nombre}\nEmail: ${data.email}`;
+  if (confirmDlg && confirmText) {
+    confirmText.textContent = texto;
+    confirmDlg.showModal();
+    confirmYes.onclick = async () => {
+      const payload = `${email}|${data.cedula}|${data.candidato}|${ELECTION_ID}|${Date.now()}`;
+      const hash = await sha256(payload);
+      votes.push({ email, candidato: data.candidato, hash_anonimo: hash, ts: Date.now() });
+      setVotes(votes);
+      logEvent('voto_emitido', `email=${email}, candidato=${data.candidato}`);
+      statusMsg.textContent = `Voto registrado. Acuse: ${hash}`;
+      statusMsg.className = 'mt-3 text-sm text-green-700';
+      lastVote?.classList.remove('hidden');
+      if (lastVote) lastVote.textContent = `Último acuse: ${hash}`;
+      voteForm.reset();
+      confirmDlg.close();
+    };
+  } else {
+    statusMsg.textContent = 'No se pudo abrir la confirmación (demo).';
+    statusMsg.className = 'mt-3 text-sm text-red-700';
+  }
 });

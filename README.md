@@ -33,3 +33,12 @@ Se agregan pantallas **Login/Registro** (mock) alineadas con HU01/HU02:
 
 > Referencia de requisitos y RNF (autenticación, bloqueo, expiración): Estudio SVES. :contentReference[oaicite:2]{index=2}
 
+# Development – Cabina de voto con hash y control de doble voto
+
+- **Confirmación de voto** previa al registro (HU06).
+- **Hash SHA-256** como acuse (demo de anonimización/acuse).
+- **Prevención de voto duplicado** por email en la elección actual (demo de constraint UNIQUE).
+- Logs simples en `localStorage` (eventos de UI).
+
+> Derivado de épicas de Votación Segura, Resultados y Auditoría. :contentReference[oaicite:3]{index=3}
+

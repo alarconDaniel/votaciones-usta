@@ -6,7 +6,7 @@
   <title>Votación – USTA (DEV)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script> tailwind.config = { darkMode: 'class' } </script>
-  <meta name="description" content="Votación demo (DEV).">
+  <meta name="description" content="Votación segura (demo) con confirmación y hash.">
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
   <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
@@ -25,8 +25,8 @@
 
   <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
     <div class="max-w-5xl mx-auto px-4 py-12 text-center">
-      <h1 class="text-3xl md:text-5xl font-bold">Votación (DEV)</h1>
-      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">Se recomienda iniciar sesión (demo) antes de votar.</p>
+      <h1 class="text-3xl md:text-5xl font-bold">Votación – Confirmación + Hash</h1>
+      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">Demo de voto único con acuse y bloqueo de doble voto.</p>
     </div>
   </header>
 
@@ -43,12 +43,27 @@
           <option value="Candidato B">Candidato B – Derecho</option>
           <option value="Candidato C">Candidato C – Económicas</option>
         </select>
-        <label class="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="acepto" required> Confirmo que mis datos son reales (demo).
-        </label>
-        <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Enviar voto</button>
+        <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Confirmar y Enviar</button>
       </form>
+
+      <dialog id="confirmDlg" class="rounded-xl p-0 w-full max-w-md">
+        <form method="dialog" class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-semibold">Confirmar voto</h3>
+          </div>
+          <div class="px-6 py-4 text-sm">
+            <p id="confirmText"></p>
+          </div>
+          <div class="px-6 py-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700">
+            <button value="cancel" class="px-3 py-1.5 rounded-lg border">Cancelar</button>
+            <button id="confirmYes" value="ok" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white">Confirmar</button>
+          </div>
+        </form>
+      </dialog>
+
       <p id="statusMsg" class="mt-3 text-sm"></p>
+
+      <div id="lastVote" class="mt-4 text-sm text-slate-600 dark:text-slate-300 hidden"></div>
     </div>
   </section>
 
