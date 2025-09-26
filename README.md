@@ -17,3 +17,12 @@ Este branch **TEST** agrega utilidades visibles para QA:
 ## Notas de QA
 - Usa el control “Latencia simulada” para probar spinners y estados.
 - Ver logs en consola: prefijo `[TEST]`.
+
+# USTA – TEST (Commit 2)
+
+Mejoras centradas en QA de accesibilidad:
+- Foco visible y navegación por teclado.
+- Etiquetas ARIA y `aria-live` para mensajes.
+- Resaltado de elementos interactivos en “modo focus”.
+
+Sigue vigente la latencia simulada y los `data-testid`.
