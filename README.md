@@ -32,3 +32,13 @@ Versión **productiva** estática del Frontend: pulido visual, SEO básico, acce
 ## Personalización
 - Cambia texto, colores y secciones en `index.html`.
 - Ajusta la validación del formulario en `script.js`.
+
+# Sistema de Votaciones USTA — Deploy (main) – Commit 2
+
+Mejoras UX y productivas:
+- Persistencia de tema en `localStorage`.
+- Validación inmediata de formularios (mensajes accesibles).
+- Navbar móvil (hamburguesa).
+- Pequeñas animaciones con utilidades Tailwind.
+
+Archivos: index.html, votacion.html, script.js, README.md.
