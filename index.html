@@ -1,94 +1,77 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>USTA – Votaciones (TEST A11y)</title>
+  <title>USTA – Votaciones (TEST QA+)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={darkMode:'class'}</script>
-  <style>
-    /* Foco QA */
-    :focus { outline: 2px dashed #9333ea; outline-offset: 3px; }
-  </style>
-  <meta name="description" content="Pruebas de accesibilidad: foco visible y ARIA.">
+  <meta name="description" content="Overlay QA, fallos aleatorios y métricas locales.">
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
-  <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-white dark:bg-slate-800 px-3 py-1 rounded">
-    Saltar al contenido
-  </a>
-
-  <!-- BANNER TEST -->
+  <!-- BANNER -->
   <div class="bg-yellow-100 dark:bg-yellow-900/30 border-b border-yellow-300 dark:border-yellow-800">
     <div class="max-w-5xl mx-auto px-4 py-2 text-sm flex items-center justify-between">
-      <strong>⚠️ MODO PRUEBAS A11y</strong>
+      <strong>⚠️ TEST QA+</strong>
       <div class="flex items-center gap-3">
-        <label class="text-xs">Latencia simulada (ms)</label>
+        <label class="text-xs">Latencia (ms)</label>
         <input id="latencyMs" type="number" value="200" min="0" step="100"
                class="w-24 px-2 py-1 rounded border border-yellow-300 dark:border-yellow-700 bg-white dark:bg-slate-800 text-sm" />
+        <label class="text-xs">Fallo %</label>
+        <input id="failPct" type="number" value="10" min="0" max="100" step="5"
+               class="w-20 px-2 py-1 rounded border border-yellow-300 dark:border-yellow-700 bg-white dark:bg-slate-800 text-sm" />
+        <button id="toggleQa" class="text-xs px-2 py-1 rounded border">Overlay QA (Q)</button>
       </div>
     </div>
   </div>
 
-  <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700" role="navigation" aria-label="Principal">
+  <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <a href="./" class="font-semibold">USTA – Votaciones (TEST)</a>
       <div class="flex items-center gap-4">
         <a href="./" class="text-sm hover:underline">Inicio</a>
         <a href="./votacion.html" class="text-sm hover:underline">Votación</a>
         <div class="flex items-center gap-3">
-          <input id="search" type="search" placeholder="Buscar..." aria-label="Buscar en el sitio"
+          <input id="search" type="search" placeholder="Buscar..."
                  class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
-          <button id="themeBtn" aria-pressed="false"
-                  class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">
-            Tema
-          </button>
+          <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border">Tema</button>
         </div>
       </div>
     </div>
   </nav>
 
-  <header id="contenido" class="bg-gradient-to-br from-fuchsia-600 to-fuchsia-800 text-white dark:from-fuchsia-700 dark:to-fuchsia-900">
-    <div class="max-w-5xl mx-auto px-4 py-16 text-center">
-      <h1 class="text-3xl md:text-5xl font-bold">A11y – Pruebas en curso</h1>
-      <p class="mt-3 text-fuchsia-100/90 max-w-2xl mx-auto">Foco visible, roles y `aria-live` para mensajes de estado.</p>
-      <a href="./votacion.html"
-         class="inline-block mt-6 bg-white text-fuchsia-700 dark:bg-slate-100 dark:text-fuchsia-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md">
-         Ir a Votar (TEST)
+  <header class="bg-gradient-to-br from-amber-600 to-amber-800 text-white dark:from-amber-700 dark:to-amber-900">
+    <div class="max-w-5xl mx-auto px-4 py-12 text-center">
+      <h1 class="text-3xl md:text-5xl font-bold">Overlay QA + Fallos Aleatorios</h1>
+      <p class="mt-3 text-amber-100/90 max-w-2xl mx-auto">Prueba de funcionalidad: induce errores de forma controlada.</p>
+      <a href="./votacion.html" class="inline-block mt-6 bg-white text-amber-700 dark:bg-slate-100 dark:text-amber-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md">
+        Ir a Votar (TEST)
       </a>
     </div>
   </header>
 
-  <section class="max-w-5xl mx-auto px-4 py-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-fuchsia-700 dark:text-fuchsia-400">Semántica</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Roles y etiquetas correctas para lectores de pantalla.</p>
-    </article>
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-fuchsia-700 dark:text-fuchsia-400">Foco</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Estilos visuales de foco accesibles (teclado).</p>
-    </article>
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-fuchsia-700 dark:text-fuchsia-400">Live Regions</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Mensajes via <code>aria-live=polite</code>.</p>
-    </article>
-  </section>
-
   <section class="max-w-2xl mx-auto px-4 pb-16">
     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h2 class="text-xl font-semibold text-fuchsia-700 dark:text-fuchsia-400">Formulario de prueba</h2>
-      <form id="contactForm" class="mt-4 grid gap-4" data-form="contacto" aria-describedby="contactHelp">
-        <p id="contactHelp" class="text-xs text-slate-500 dark:text-slate-400">Todos los campos son obligatorios.</p>
-        <input name="nombre" required placeholder="Tu nombre" aria-label="Nombre"
-               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <input name="email" type="email" required placeholder="Tu email" aria-label="Correo"
-               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <textarea name="mensaje" rows="4" required placeholder="Tu mensaje" aria-label="Mensaje"
-                  class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2"></textarea>
-        <button class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-lg px-4 py-2 w-fit">Enviar</button>
+      <h2 class="text-xl font-semibold text-amber-700 dark:text-amber-400">Formulario demo</h2>
+      <form id="contactForm" class="mt-4 grid gap-4" data-form="contacto">
+        <input name="nombre" required placeholder="Tu nombre" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="email" type="email" required placeholder="Tu email" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <textarea name="mensaje" rows="4" required placeholder="Tu mensaje" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2"></textarea>
+        <button class="bg-amber-600 hover:bg-amber-700 text-white rounded-lg px-4 py-2 w-fit">Enviar</button>
       </form>
-      <p id="statusMsg" class="mt-3 text-sm" aria-live="polite"></p>
+      <p id="statusMsg" class="mt-3 text-sm"></p>
+      <div class="mt-4 text-xs text-slate-500 dark:text-slate-400" id="qaReport"></div>
     </div>
   </section>
+
+  <!-- OVERLAY QA -->
+  <div id="qaOverlay" class="hidden fixed inset-0 bg-black/70 text-white z-50">
+    <div class="max-w-5xl mx-auto p-6 mt-10">
+      <h3 class="text-xl font-semibold">Panel QA</h3>
+      <ul class="mt-3 space-y-1 text-sm" id="qaList"></ul>
+      <p class="mt-4 text-xs opacity-80">Pulsa <kbd>Q</kbd> o el botón para cerrar.</p>
+    </div>
+  </div>
 
   <footer class="border-t border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">

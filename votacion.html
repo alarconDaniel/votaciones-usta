@@ -1,56 +1,59 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Votación – TEST A11y</title>
+  <title>Votación – TEST QA+</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={darkMode:'class'}</script>
-  <meta name="description" content="Formulario de pruebas con foco visible y live region.">
-  <style>:focus{outline:2px dashed #9333ea;outline-offset:3px}</style>
+  <meta name="description" content="Votación demo con fallos aleatorios y overlay QA.">
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
-  <a href="#form" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-white dark:bg-slate-800 px-3 py-1 rounded">Saltar al formulario</a>
 
-  <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700" role="navigation" aria-label="Principal">
+  <div class="bg-yellow-100 dark:bg-yellow-900/30 border-b border-yellow-300 dark:border-yellow-800">
+    <div class="max-w-5xl mx-auto px-4 py-2 text-xs sm:text-sm">
+      TEST QA+: usa el control de la portada para latencia y fallo%.
+    </div>
+  </div>
+
+  <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <a class="font-semibold" href="./">USTA – Votaciones (TEST)</a>
       <div class="flex items-center gap-4">
         <a href="./" class="text-sm hover:underline">Inicio</a>
         <a href="./votacion.html" class="text-sm underline font-semibold">Votación</a>
         <div class="flex items-center gap-3">
-          <input id="search" type="search" placeholder="Buscar..." aria-label="Buscar"
-                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
-          <button id="themeBtn" aria-pressed="false" class="text-sm px-3 py-1.5 rounded-lg border">Tema</button>
+          <input id="search" type="search" placeholder="Buscar..." class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
+          <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border">Tema</button>
         </div>
       </div>
     </div>
   </nav>
 
-  <header class="bg-gradient-to-br from-fuchsia-600 to-fuchsia-800 text-white dark:from-fuchsia-700 dark:to-fuchsia-900">
+  <header class="bg-gradient-to-br from-amber-600 to-amber-800 text-white dark:from-amber-700 dark:to-amber-900">
     <div class="max-w-5xl mx-auto px-4 py-12 text-center">
-      <h1 class="text-3xl md:text-5xl font-bold">Votación – A11y (TEST)</h1>
-      <p class="mt-3 text-fuchsia-100/90 max-w-2xl mx-auto">Mensajes con <code>aria-live</code> para estados.</p>
+      <h1 class="text-3xl md:text-5xl font-bold">Votación (Simulación de Errores)</h1>
+      <p class="mt-3 text-amber-100/90 max-w-2xl mx-auto">Prueba de funcionalidad con posibilidad de error aleatorio.</p>
     </div>
   </header>
 
-  <section class="max-w-2xl mx-auto px-4 pb-16 mt-10" id="form">
+  <section class="max-w-2xl mx-auto px-4 pb-16 mt-10">
     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h2 class="text-xl font-semibold text-fuchsia-700 dark:text-fuchsia-400">Formulario de votación (demo)</h2>
-      <form id="voteForm" class="mt-4 grid gap-4" aria-describedby="help">
-        <p id="help" class="text-xs text-slate-500 dark:text-slate-400">Campos requeridos. No se persiste.</p>
-        <input name="nombre" required placeholder="Tu nombre" aria-label="Nombre" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <input name="email" type="email" required placeholder="Tu email institucional" aria-label="Correo" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <input name="cedula" type="number" required placeholder="Tu cédula" aria-label="Cédula" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <select name="candidato" required aria-label="Candidato" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+      <h2 class="text-xl font-semibold text-amber-700 dark:text-amber-400">Formulario</h2>
+      <form id="voteForm" class="mt-4 grid gap-4">
+        <input name="nombre" required placeholder="Tu nombre" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="email" type="email" required placeholder="Tu email institucional" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="cedula" type="number" required placeholder="Tu cédula" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <select name="candidato" required class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
           <option value="">Selecciona un candidato</option>
           <option value="Candidato A">Candidato A – Ingeniería</option>
           <option value="Candidato B">Candidato B – Derecho</option>
           <option value="Candidato C">Candidato C – Económicas</option>
         </select>
-        <button class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-lg px-4 py-2 w-fit">Enviar voto (demo)</button>
+        <button class="bg-amber-600 hover:bg-amber-700 text-white rounded-lg px-4 py-2 w-fit">Enviar voto (demo)</button>
       </form>
-      <p id="statusMsg" class="mt-3 text-sm" aria-live="polite"></p>
+      <p id="statusMsg" class="mt-3 text-sm"></p>
+      <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Pulsa <kbd>Q</kbd> en la portada para abrir el Overlay QA.</p>
     </div>
   </section>
 
@@ -60,22 +63,30 @@
       <a class="hover:underline" href="https://tailwindcss.com/docs" target="_blank" rel="noreferrer">Tailwind Docs</a>
     </div>
   </footer>
+
   <script src="./script.js"></script>
   <script>
     (function(){
       const form = document.getElementById('voteForm');
       const msg = document.getElementById('statusMsg');
       function getLatency(){ const el = parent?.document?.getElementById('latencyMs'); return parseInt(el?.value||'0',10)||0; }
+      function getFailPct(){ const el = parent?.document?.getElementById('failPct'); const n = parseInt(el?.value||'0',10)||0; return Math.min(100, Math.max(0,n)); }
       function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
       form?.addEventListener('submit', async (e)=>{
         e.preventDefault();
         const btn = form.querySelector('button'); const t=btn.textContent;
         btn.disabled=true; btn.textContent='Enviando…';
         await sleep(getLatency());
-        msg.textContent='Prueba de funcionalidad: voto demo enviado.';
-        msg.className='mt-3 text-sm text-green-700';
+        const fail = Math.random()*100 < getFailPct();
+        if (fail) {
+          msg.textContent='Error simulado: 409 Conflicto de voto.';
+          msg.className='mt-3 text-sm text-red-700';
+        } else {
+          msg.textContent='OK (demo): voto simulado aceptado.';
+          msg.className='mt-3 text-sm text-green-700';
+          form.reset();
+        }
         btn.disabled=false; btn.textContent=t;
-        form.reset();
       });
     })();
   </script>

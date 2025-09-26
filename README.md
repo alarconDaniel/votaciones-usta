@@ -26,3 +26,12 @@ Mejoras centradas en QA de accesibilidad:
 - Resaltado de elementos interactivos en “modo focus”.
 
 Sigue vigente la latencia simulada y los `data-testid`.
+
+# USTA – TEST (Commit 3)
+
+Herramientas QA adicionales:
+- Overlay QA (tecla `Q` o `?qa=1` en la URL).
+- Porcentaje de fallo aleatorio para probar errores.
+- Reporte rápido: contador de envíos OK/ERROR.
+
+Todo es visual y local. No se envían datos reales.
