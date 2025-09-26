@@ -1,31 +1,46 @@
-// Interacciones de ejemplo
-const themeBtn = document.getElementById('themeBtn');
-const root = document.documentElement;
-const statusMsg = document.getElementById('statusMsg');
-const contactForm = document.getElementById('contactForm');
-const yearSpan = document.getElementById('year');
+// Base productiva: tema, año, y formulario demo
+const el = (id) => document.getElementById(id);
+const themeBtn = el('themeBtn');
+const statusMsg = el('statusMsg');
+const contactForm = el('contactForm');
+const yearSpan = el('year');
 
-yearSpan.textContent = new Date().getFullYear();
+// Año dinámico
+if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-// Alternar tema claro/oscuro con una clase en <html>
-themeBtn?.addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  // Tailwind modo simple: usamos utilidades condicionales cuando hay clase 'dark' en body
-  if (document.body.classList.contains('dark')) {
+// Preferencia de tema (simple)
+function setScheme(scheme) {
+  const root = document.documentElement;
+  if (scheme === 'dark') {
+    document.body.classList.add('dark');
     root.style.setProperty('color-scheme', 'dark');
-    document.body.classList.add('bg-slate-900', 'text-slate-100');
+    themeBtn?.setAttribute('aria-pressed', 'true');
   } else {
+    document.body.classList.remove('dark');
     root.style.setProperty('color-scheme', 'light');
-    document.body.classList.remove('bg-slate-900', 'text-slate-100');
+    themeBtn?.setAttribute('aria-pressed', 'false');
   }
+}
+(function initTheme() {
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+  setScheme(prefersDark ? 'dark' : 'light');
+})();
+themeBtn?.addEventListener('click', () => {
+  const isDark = document.body.classList.contains('dark');
+  setScheme(isDark ? 'light' : 'dark');
 });
 
-// Formulario de ejemplo (solo front, sin backend)
+// Formulario de contacto (demo)
 contactForm?.addEventListener('submit', (e) => {
-  e.preventDefault(); // esto es para demo, no envía realmente
+  e.preventDefault();
+  const btn = contactForm.querySelector('button');
+  const t = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Enviando…';
   const data = Object.fromEntries(new FormData(contactForm).entries());
-  // Simula un envío
-  statusMsg.textContent = `¡Gracias, ${data.nombre}! Tu mensaje fue recibido (demo).`;
-  statusMsg.className = 'text-green-700';
-  contactForm.reset();
+  setTimeout(() => {
+    statusMsg.textContent = `¡Gracias, ${data.nombre}! Mensaje recibido (demo).`;
+    statusMsg.className = 'mt-3 text-sm text-green-700';
+    btn.disabled = false; btn.textContent = t;
+    contactForm.reset();
+  }, 300);
 });

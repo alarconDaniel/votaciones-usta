@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,19 +7,28 @@
 
   <!-- Tailwind vía CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class'
-    }
-  </script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
 
-  <meta name="description" content="Sistema de votaciones de la Universidad Santo Tomás. Ejemplo de despliegue estático con Tailwind y JS." />
+  <!-- SEO / OG -->
+  <meta name="description" content="Sistema de votaciones de la Universidad Santo Tomás. Versión productiva estática con Tailwind." />
+  <meta property="og:title" content="Sistema de Votaciones – USTA" />
+  <meta property="og:description" content="Participa en el proceso democrático Tomasino. Frontend listo para deploy estático." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Logo_de_la_Santo_Tom%C3%A1s.svg/1200px-Logo_de_la_Santo_Tom%C3%A1s.svg.png" />
+  <meta name="theme-color" content="#0b5bd3" />
+
+  <!-- Favicon (opcional, CDN) -->
+  <link rel="icon" href="https://fav.farm/📥" />
+
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
+  <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-blue-600 text-white px-3 py-1 rounded">
+    Saltar al contenido
+  </a>
 
   <!-- NAV -->
-  <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+  <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between" role="navigation" aria-label="Principal">
       <a href="./" class="font-semibold">USTA – Votaciones</a>
 
       <div class="flex items-center gap-4">
@@ -28,10 +37,12 @@
 
         <div class="flex items-center gap-3">
           <input id="search" type="search" placeholder="Buscar..."
-                class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring focus:ring-blue-200 dark:focus:ring-blue-500/30" />
+                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring focus:ring-blue-200 dark:focus:ring-blue-500/30"
+                 aria-label="Buscar en el sitio" />
           <button id="themeBtn"
-                  class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">
-            Cambiar tema
+                  class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  aria-pressed="false" aria-label="Cambiar tema">
+            Tema
           </button>
         </div>
       </div>
@@ -40,15 +51,13 @@
 
   <!-- HERO -->
   <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
-    <div class="max-w-5xl mx-auto px-4 py-16 text-center">
-      <!-- Logo USTA -->
+    <div class="max-w-6xl mx-auto px-4 py-16 text-center">
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Logo_de_la_Santo_Tom%C3%A1s.svg/1200px-Logo_de_la_Santo_Tom%C3%A1s.svg.png"
-           alt="Logo USTA" class="mx-auto w-73 mb-6" />
+           alt="Logo USTA" class="mx-auto w-40 md:w-56 lg:w-64 mb-6" loading="lazy" />
 
       <h1 class="text-3xl md:text-5xl font-bold">Sistema de Votaciones USTA</h1>
       <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">
-        Una plataforma académica de participación democrática para la comunidad Tomasina.  
-        Ejemplo de despliegue con Tailwind, JavaScript y GitHub Pages.
+        Participa de forma simple y accesible. Frontend estático listo para publicar en Pages o Netlify.
       </p>
       <a href="./votacion.html"
          class="inline-block mt-6 bg-white text-blue-700 dark:bg-slate-100 dark:text-blue-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md">
@@ -57,53 +66,46 @@
     </div>
   </header>
 
-  <!-- FEATURES -->
-  <section id="features" class="max-w-5xl mx-auto px-4 py-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Transparencia</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Cada voto se registra de forma única en el navegador del votante como demo. En un sistema real se integraría con un backend seguro.</p>
-    </article>
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Accesibilidad</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Diseñado para que toda la comunidad universitaria pueda participar fácilmente desde cualquier dispositivo.</p>
-    </article>
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Confianza</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Modelo educativo y valores institucionales de la Santoto respaldan la integridad del proceso.</p>
-    </article>
-  </section>
+  <!-- CONTENIDO -->
+  <main id="contenido" class="max-w-6xl mx-auto px-4">
+    <!-- FEATURES -->
+    <section id="features" class="py-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Transparencia</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Diseño claro y trazabilidad de la UI (demo). En un sistema real se integra con backend y auditoría.</p>
+      </article>
+      <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Accesibilidad</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Navegación por teclado, foco visible y etiquetas ARIA para una mejor experiencia.</p>
+      </article>
+      <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Despliegue fácil</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Sube los archivos y activa Pages o Netlify Drop. Sin builds ni Node.</p>
+      </article>
+    </section>
 
-  <!-- RECTÁNGULO DE AVISO (full-width) -->
-  <section class="w-full px-4">
-    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm max-w-5xl mx-auto px-6 py-4 mb-20">
-      <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Formulario de votación agregado</h3>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-        Oprima <span class="font-semibold">“Votación”</span> en la cabecera para rellenar su voto.
-      </p>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section class="max-w-2xl mx-auto px-4 pb-16">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Contacto</h2>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Este formulario es de ejemplo (no envía datos a un backend).</p>
-      <form id="contactForm" class="mt-4 grid gap-4" data-form="contacto">
-        <input name="nombre" required placeholder="Tu nombre"
-               class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-2" />
-        <input name="email" type="email" required placeholder="Tu email"
-               class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-2" />
-        <textarea name="mensaje" rows="4" required placeholder="Tu mensaje"
-                  class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-2"></textarea>
-        <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Enviar</button>
-      </form>
-      <p id="statusMsg" class="mt-3 text-sm"></p>
-    </div>
-  </section>
+    <!-- CONTACTO -->
+    <section class="max-w-2xl pb-16 mx-auto">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+        <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Contacto</h2>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Formulario de demostración (no envía a backend).</p>
+        <form id="contactForm" class="mt-4 grid gap-4" data-form="contacto" aria-describedby="statusMsg">
+          <input name="nombre" required placeholder="Tu nombre"
+                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-2" />
+          <input name="email" type="email" required placeholder="Tu email"
+                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-2" />
+          <textarea name="mensaje" rows="4" required placeholder="Tu mensaje"
+                    class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-2"></textarea>
+          <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Enviar</button>
+        </form>
+        <p id="statusMsg" class="mt-3 text-sm" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
 
   <!-- FOOTER -->
   <footer class="border-t border-slate-200 dark:border-slate-700">
-    <div class="max-w-5xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
       <span>© <span id="year"></span> Sistema de Votaciones USTA</span>
       <a class="hover:underline" href="https://tailwindcss.com/docs" target="_blank" rel="noreferrer">Tailwind Docs</a>
     </div>
