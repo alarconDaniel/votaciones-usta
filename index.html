@@ -8,15 +8,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
 
-  <meta name="description" content="Sistema de votaciones USTA productivo con mejoras UX y accesibilidad." />
+  <meta name="description" content="Frontend productivo del Sistema de Votaciones USTA: accesible, responsive y listo para deploy." />
   <meta property="og:title" content="Sistema de Votaciones – USTA" />
-  <meta property="og:description" content="Frontend productivo con Tailwind CDN. Listo para Pages/Netlify." />
+  <meta property="og:description" content="Cabina demo con confirmación, hash SHA-256 y recibo imprimible (sin backend)." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#0b5bd3" />
-  <link rel="icon" href="https://fav.farm/📥" />
+  <link rel="icon" href="https://fav.farm/✅" />
   <style>
     .fade-in { animation: fade .6s ease-out both }
     @keyframes fade { from {opacity:.0; transform:translateY(6px)} to {opacity:1; transform:none} }
+    .shine { background: linear-gradient(110deg, rgba(255,255,255,.18) 8%, rgba(255,255,255,.06) 18%, rgba(255,255,255,0) 33%); background-size: 200% 100%; animation: shine 2.4s linear infinite }
+    @keyframes shine { to { background-position-x: -200% } }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
@@ -29,7 +31,6 @@
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between" role="navigation" aria-label="Principal">
       <a href="./" class="font-semibold">USTA – Votaciones</a>
 
-      <!-- Desktop -->
       <div class="hidden md:flex items-center gap-4">
         <a href="./" class="text-sm hover:underline">Inicio</a>
         <a href="./votacion.html" class="text-sm hover:underline">Votación</a>
@@ -45,7 +46,6 @@
         </div>
       </div>
 
-      <!-- Mobile -->
       <button id="menuBtn" class="md:hidden px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600" aria-expanded="false" aria-controls="mobileMenu">
         Menú
       </button>
@@ -65,17 +65,20 @@
   </nav>
 
   <!-- HERO -->
-  <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
-    <div class="max-w-6xl mx-auto px-4 py-16 text-center">
-      <h1 class="text-3xl md:text-5xl font-bold fade-in">Sistema de Votaciones USTA</h1>
-      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto fade-in" style="animation-delay:.1s">
-        Interfaz productiva, responsive y accesible. Lista para Pages/Netlify.
-      </p>
-      <a href="./votacion.html"
-         class="inline-block mt-6 bg-white text-blue-700 dark:bg-slate-100 dark:text-blue-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md fade-in"
-         style="animation-delay:.2s">
-         Ir a Votar
-      </a>
+  <header class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none shine"></div>
+    <div class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
+      <div class="max-w-6xl mx-auto px-4 py-16 text-center">
+        <h1 class="text-3xl md:text-5xl font-bold fade-in">Sistema de Votaciones USTA</h1>
+        <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto fade-in" style="animation-delay:.08s">
+          Interfaz productiva, accesible y elegante. Lista para despliegue gratuito en Pages/Netlify.
+        </p>
+        <a href="./votacion.html"
+           class="inline-block mt-6 bg-white text-blue-700 dark:bg-slate-100 dark:text-blue-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md fade-in"
+           style="animation-delay:.16s">
+           Ir a Votar
+        </a>
+      </div>
     </div>
   </header>
 
@@ -83,16 +86,16 @@
   <main id="contenido" class="max-w-6xl mx-auto px-4">
     <section id="features" class="py-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 fade-in">
-        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Accesible</h3>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Foco visible, aria-live, navegación por teclado.</p>
+        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Confirmación</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Antes de registrar, la cabina solicita confirmar los datos (demo).</p>
       </article>
       <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 fade-in" style="animation-delay:.05s">
-        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Rápido</h3>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Sin builds, CDN y estilos utilitarios.</p>
+        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Acuse (hash)</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Se genera un <strong>SHA-256</strong> local como comprobante (demo).</p>
       </article>
       <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 fade-in" style="animation-delay:.1s">
-        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Listo para deploy</h3>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Pages/Netlify en minutos.</p>
+        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Voto único</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Se bloquea el doble voto por email institucional en la elección actual (local).</p>
       </article>
     </section>
 

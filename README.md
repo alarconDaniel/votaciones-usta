@@ -1,44 +1,25 @@
-# Sistema de Votaciones USTA — Deploy (main)
+# Sistema de Votaciones USTA — Deploy (main) – FINAL
 
-Versión **productiva** estática del Frontend: pulido visual, SEO básico, accesibilidad y estructura lista para publicar en **GitHub Pages** o **Netlify**.
+Frontend productivo con:
+- **UI pulida** (responsive, accesible).
+- **Tema persistente** (localStorage + prefers-color-scheme).
+- **Cabina de voto (demo)** con:
+  - Confirmación previa al registro.
+  - **Acuse SHA-256** (hash local) visible y **recibo imprimible**.
+  - **Prevención de doble voto** por email institucional @usta.edu.co (demo local).
+- Sin backend. Adecuado para publicar en Pages/Netlify como prototipo.
 
-## Qué incluye
-- Tailwind vía CDN (sin Node ni builds).
-- Diseño responsive con foco en accesibilidad (skip-link, roles, aria-live).
-- Modo oscuro/claro + persistencia por `prefers-color-scheme`.
-- Metadatos SEO y Open Graph.
-- Formulario de contacto (demo local, sin backend).
-- Página de votación (demo).
-
-## Estructura
+## Archivos
 ├── index.html
 ├── votacion.html
 ├── script.js
 └── README.md
 
+## Seguridad (nota)
+Este demo **no** reemplaza un sistema electoral real. Para producción: autenticación robusta, backend seguro, firma/acuse verificable, auditoría, cifrado, integridad y controles anti-fraude.
 
-## Despliegue rápido
-### GitHub Pages
-1) Crea el repo y sube estos archivos.  
-2) En **Settings → Pages**: **Deploy from a branch**, **Branch: main**, **/(root)**.  
-3) Abre la URL `https://<tu-usuario>.github.io/<tu-repo>/`.
+## Despliegue
+- GitHub Pages: Settings → Pages → Branch `main`.
+- Netlify Drop: arrastra esta carpeta.
 
-### Netlify (Drop)
-1) Entra a https://app.netlify.com/drop  
-2) Arrastra la carpeta del proyecto.
-
-> Este sitio es **solo frontend**. Para un flujo real: integra un backend seguro (autenticación, emisión de recibos, verificación, auditoría).
-
-## Personalización
-- Cambia texto, colores y secciones en `index.html`.
-- Ajusta la validación del formulario en `script.js`.
-
-# Sistema de Votaciones USTA — Deploy (main) – Commit 2
-
-Mejoras UX y productivas:
-- Persistencia de tema en `localStorage`.
-- Validación inmediata de formularios (mensajes accesibles).
-- Navbar móvil (hamburguesa).
-- Pequeñas animaciones con utilidades Tailwind.
-
-Archivos: index.html, votacion.html, script.js, README.md.
+© USTA – Demo educativo.

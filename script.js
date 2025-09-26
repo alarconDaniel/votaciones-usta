@@ -1,4 +1,4 @@
-// UX productiva: tema persistente, navbar móvil, validaciones accesibles
+// Final deploy: tema persistente, navbar móvil, contacto, utilidades de voto (compartidas)
 const $ = (id) => document.getElementById(id);
 const themeBtn = $('themeBtn');
 const mThemeBtn = $('m_themeBtn');
@@ -10,6 +10,7 @@ const yearSpan = $('year');
 
 if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
+// ---- Tema persistente ----
 function applyScheme(scheme) {
   const root = document.documentElement;
   if (scheme === 'dark') {
@@ -38,32 +39,45 @@ function toggleTheme() {
 themeBtn?.addEventListener('click', toggleTheme);
 mThemeBtn?.addEventListener('click', toggleTheme);
 
-// Navbar móvil
+// ---- Navbar móvil ----
 menuBtn?.addEventListener('click', () => {
   const isOpen = !mobileMenu.classList.contains('hidden');
   mobileMenu.classList.toggle('hidden');
   menuBtn.setAttribute('aria-expanded', String(!isOpen));
 });
 
-// Validación de contacto accesible
+// ---- Contacto (demo) ----
 contactForm?.addEventListener('submit', (e) => {
   e.preventDefault();
   const btn = contactForm.querySelector('button');
   const t = btn.textContent;
   btn.disabled = true; btn.textContent = 'Enviando…';
   const data = Object.fromEntries(new FormData(contactForm).entries());
-
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || '');
-  if (!emailOk) {
-    statusMsg.textContent = 'Por favor ingresa un email válido.';
-    statusMsg.className = 'mt-3 text-sm text-red-700';
-    btn.disabled = false; btn.textContent = t;
-    return;
-  }
   setTimeout(() => {
-    statusMsg.textContent = `Gracias, ${data.nombre}. Mensaje recibido (demo).`;
-    statusMsg.className = 'mt-3 text-sm text-green-700';
-    contactForm.reset();
+    if (!emailOk) {
+      statusMsg.textContent = 'Por favor ingresa un email válido.';
+      statusMsg.className = 'mt-3 text-sm text-red-700';
+    } else {
+      statusMsg.textContent = `Gracias, ${data.nombre}. Mensaje recibido (demo).`;
+      statusMsg.className = 'mt-3 text-sm text-green-700';
+      contactForm.reset();
+    }
     btn.disabled = false; btn.textContent = t;
   }, 300);
 });
+
+// ---- Utilidades de voto (compartidas con votación) ----
+const ELECTION_ID = 'CE-2025';
+const LS_VOTES = `votes_${ELECTION_ID}`; // [{email, candidato, hash_anonimo, ts}]
+export async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+export function getVotes() {
+  return JSON.parse(localStorage.getItem(LS_VOTES) || '[]');
+}
+export function setVotes(arr) {
+  localStorage.setItem(LS_VOTES, JSON.stringify(arr));
+}

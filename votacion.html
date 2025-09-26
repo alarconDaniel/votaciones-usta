@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Votación – USTA</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Votación – USTA (FINAL)</title>
 
+  <!-- Tailwind por CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
 
-  <meta name="description" content="Votación USTA – versión productiva con validación accesible (demo)." />
+  <meta name="description" content="Cabina de votación demo: confirmación, acuse SHA-256 y recibo imprimible. Sin backend." />
+  <style>
+    @media print {
+      nav, header, footer, .no-print { display: none !important; }
+      #recibo { border: none; box-shadow: none; }
+      body { background: white !important; color: black !important; }
+    }
+    .fade-in { animation: fade .5s ease-out both }
+    @keyframes fade { from {opacity:.0; transform:translateY(6px)} to {opacity:1; transform:none} }
+    .kbd { border:1px solid rgba(0,0,0,.2); border-bottom-width:2px; padding:.1rem .35rem; border-radius:.375rem; font-size:.8em }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
   <a href="#voteForm" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-blue-600 text-white px-3 py-1 rounded">
     Saltar al formulario
   </a>
 
+  <!-- NAV -->
   <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <a class="font-semibold" href="./">USTA – Votaciones</a>
@@ -23,39 +35,105 @@
         <a href="./votacion.html" class="text-sm underline font-semibold">Votación</a>
         <div class="flex items-center gap-3">
           <input id="search" type="search" placeholder="Buscar..."
-                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
-          <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600">Tema</button>
+                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5"
+                 aria-label="Buscar en el sitio">
+          <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600"
+                  aria-pressed="false" aria-label="Cambiar tema">
+            Tema
+          </button>
         </div>
       </div>
     </div>
   </nav>
 
+  <!-- HERO -->
   <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
     <div class="max-w-6xl mx-auto px-4 py-12 text-center">
-      <h1 class="text-3xl md:text-5xl font-bold">Votación (Demo)</h1>
-      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">Validación básica y UI productiva. Sin backend.</p>
+      <h1 class="text-3xl md:text-5xl font-bold">Cabina de Votación</h1>
+      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">Confirmación previa, acuse SHA-256 y bloqueo de doble voto (demo local).</p>
     </div>
   </header>
 
+  <!-- FORMULARIO -->
   <main class="max-w-2xl mx-auto px-4 pb-16 mt-10">
     <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
       <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Formulario de votación</h2>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+        Completa los datos y confirma tu elección. <span class="kbd">Demo</span>
+      </p>
+
       <form id="voteForm" class="mt-4 grid gap-4" aria-describedby="statusMsg">
-        <input name="nombre" required placeholder="Tu nombre" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <input name="email" type="email" required placeholder="Tu email institucional" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <input name="cedula" inputmode="numeric" required placeholder="Tu cédula" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <select name="candidato" required class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="nombre" required placeholder="Tu nombre"
+               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="email" type="email" required placeholder="Tu email institucional @usta.edu.co"
+               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="cedula" inputmode="numeric" required placeholder="Tu cédula"
+               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <select name="candidato" required
+                class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
           <option value="">Selecciona un candidato</option>
           <option value="Candidato A">Candidato A – Ingeniería</option>
           <option value="Candidato B">Candidato B – Derecho</option>
           <option value="Candidato C">Candidato C – Económicas</option>
         </select>
-        <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Enviar (demo)</button>
+        <div class="flex items-center gap-3">
+          <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">
+            Confirmar y Enviar
+          </button>
+          <span id="spinner" class="hidden text-sm text-slate-500">Procesando…</span>
+        </div>
       </form>
+
       <p id="statusMsg" class="mt-3 text-sm" aria-live="polite"></p>
+
+      <!-- Confirmación -->
+      <dialog id="confirmDlg" class="rounded-xl p-0 w-full max-w-md">
+        <form method="dialog"
+              class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+            <h3 class="font-semibold">Confirmar voto</h3>
+          </div>
+          <div class="px-6 py-4 text-sm">
+            <p id="confirmText" class="whitespace-pre-line"></p>
+          </div>
+          <div class="px-6 py-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700">
+            <button value="cancel" class="px-3 py-1.5 rounded-lg border">Cancelar</button>
+            <button id="confirmYes" value="ok" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white">
+              Confirmar y Registrar
+            </button>
+          </div>
+        </form>
+      </dialog>
+
+      <!-- Recibo / Acuse -->
+      <div id="recibo" class="hidden mt-6 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+        <h3 class="font-semibold text-blue-700 dark:text-blue-400">Recibo de voto (demo)</h3>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          Guarda o imprime este comprobante. No contiene datos sensibles; el hash sirve como acuse local.
+        </p>
+        <dl class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm">
+          <div><dt class="text-slate-500">Elección</dt><dd id="r-eleccion" class="font-medium">—</dd></div>
+          <div><dt class="text-slate-500">Fecha/Hora</dt><dd id="r-fecha" class="font-medium">—</dd></div>
+          <div><dt class="text-slate-500">Nombre</dt><dd id="r-nombre" class="font-medium">—</dd></div>
+          <div><dt class="text-slate-500">Email</dt><dd id="r-email" class="font-medium">—</dd></div>
+          <div class="sm:col-span-2 break-all"><dt class="text-slate-500">Candidato</dt><dd id="r-candidato" class="font-medium">—</dd></div>
+          <div class="sm:col-span-2 break-all"><dt class="text-slate-500">Hash (acuse)</dt><dd id="r-hash" class="font-mono text-xs sm:text-sm">—</dd></div>
+        </dl>
+        <div class="mt-4 flex flex-wrap gap-3 no-print">
+          <button id="btnImprimir" class="px-3 py-1.5 rounded-lg border">Imprimir</button>
+          <button id="btnCopiar" class="px-3 py-1.5 rounded-lg border">Copiar hash</button>
+          <a id="btnDescargar" download="acuse-usta.txt"
+             class="px-3 py-1.5 rounded-lg border inline-block"
+             href="#">Descargar .txt</a>
+        </div>
+      </div>
+
+      <!-- Último acuse rápido -->
+      <div id="lastVote" class="mt-4 text-xs text-slate-500 dark:text-slate-400 hidden"></div>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer class="border-t border-slate-200 dark:border-slate-700">
     <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
       <span>© <span id="year"></span> Sistema de Votaciones USTA</span>
@@ -63,27 +141,158 @@
     </div>
   </footer>
 
-  <script src="./script.js"></script>
-  <script>
-    // Validación inmediata (demo)
-    const voteForm = document.getElementById('voteForm');
-    const statusMsg = document.getElementById('statusMsg');
-    voteForm?.addEventListener('submit', (e) => {
+  <!-- Lógica: usa utilidades exportadas de script.js si están disponibles; si no, define fallback -->
+  <script type="module">
+    // --- Import dinámico de utilidades compartidas (si el script.js las expone como módulo)
+    let sha256, getVotes, setVotes;
+    const ELECTION_ID = 'CE-2025';
+    const LS_VOTES = `votes_${ELECTION_ID}`; // [{email, candidato, hash_anonimo, ts}]
+
+    try {
+      const mod = await import('./script.js');
+      sha256 = mod.sha256;
+      getVotes = mod.getVotes;
+      setVotes = mod.setVotes;
+    } catch (e) {
+      // Fallback local si no existe módulo (mantiene la página autosuficiente)
+      sha256 = async function(text) {
+        const data = new TextEncoder().encode(text);
+        const hash = await crypto.subtle.digest('SHA-256', data);
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+      };
+      getVotes = function() { return JSON.parse(localStorage.getItem(LS_VOTES) || '[]'); };
+      setVotes = function(arr) { localStorage.setItem(LS_VOTES, JSON.stringify(arr)); };
+    }
+
+    // --- Helpers de UI ---
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const voteForm   = $('#voteForm');
+    const statusMsg  = $('#statusMsg');
+    const spinner    = $('#spinner');
+    const confirmDlg = $('#confirmDlg');
+    const confirmText= $('#confirmText');
+    const confirmYes = $('#confirmYes');
+    const lastVoteEl = $('#lastVote');
+    const yearSpan   = $('#year');
+    const themeBtn   = $('#themeBtn');
+
+    if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+    // Tema mínimo (por si el index maneja persistencia)
+    themeBtn?.addEventListener('click', () => {
+      const root = document.documentElement;
+      const isDark = document.body.classList.toggle('dark');
+      root.style.setProperty('color-scheme', isDark ? 'dark' : 'light');
+      themeBtn.setAttribute('aria-pressed', String(isDark));
+    });
+
+    function showStatus(msg, ok=true) {
+      statusMsg.textContent = msg;
+      statusMsg.className = 'mt-3 text-sm ' + (ok ? 'text-green-700' : 'text-red-700');
+    }
+
+    function showLastVote() {
+      const vs = getVotes();
+      const v = vs[vs.length-1];
+      if (!v) return;
+      lastVoteEl.classList.remove('hidden');
+      const when = new Date(v.ts).toLocaleString();
+      lastVoteEl.textContent = `Último acuse: ${v.hash_anonimo} — ${when}`;
+    }
+    showLastVote();
+
+    // Validaciones simples
+    function isUstaEmail(email='') {
+      return email.toLowerCase().trim().endsWith('@usta.edu.co');
+    }
+
+    // Descarga de TXT
+    function buildTxtContent({nombre, email, candidato, hash, eleccion, fecha}) {
+      return [
+        'USTA – Acuse de voto (DEMO)',
+        `Elección: ${eleccion}`,
+        `Fecha/Hora: ${fecha}`,
+        `Nombre: ${nombre}`,
+        `Email: ${email}`,
+        `Candidato: ${candidato}`,
+        `Hash: ${hash}`,
+        '',
+        'Este comprobante es local (demo). No constituye voto real ni reemplaza sistemas oficiales.'
+      ].join('\n');
+    }
+
+    // Flujo principal
+    voteForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const d = Object.fromEntries(new FormData(voteForm).entries());
-      if (!d.email.endsWith('@usta.edu.co')) {
-        statusMsg.textContent = 'Usa tu email institucional @usta.edu.co (demo).';
-        statusMsg.className = 'mt-3 text-sm text-red-700';
+      const data = Object.fromEntries(new FormData(voteForm).entries());
+      const email = (data.email || '').trim().toLowerCase();
+
+      if (!isUstaEmail(email)) {
+        showStatus('Usa tu correo institucional @usta.edu.co (demo).', false);
         return;
       }
-      const btn = voteForm.querySelector('button'); const t = btn.textContent;
-      btn.disabled = true; btn.textContent = 'Enviando…';
-      setTimeout(() => {
-        statusMsg.textContent = 'Voto simulado recibido (demo).';
-        statusMsg.className = 'mt-3 text-sm text-green-700';
+      const votes = getVotes();
+      if (votes.some(v => v.email === email)) {
+        showStatus('Ya existe un voto registrado para este correo en la elección actual (demo).', false);
+        return;
+      }
+
+      // Rellenar diálogo de confirmación
+      confirmText.textContent =
+        `Confirma tu voto para: ${data.candidato}\n\n` +
+        `Nombre: ${data.nombre}\n` +
+        `Email: ${data.email}\n` +
+        `Cédula: ${data.cedula}`;
+      confirmDlg.showModal();
+
+      // Confirmación
+      confirmYes.onclick = async () => {
+        spinner.classList.remove('hidden');
+        const btn = voteForm.querySelector('button');
+        const t = btn.textContent;
+        btn.disabled = true; btn.textContent = 'Registrando…';
+
+        const payload = `${email}|${data.cedula}|${data.candidato}|${ELECTION_ID}|${Date.now()}`;
+        const hash = await sha256(payload);
+        const record = { email, candidato: data.candidato, hash_anonimo: hash, ts: Date.now() };
+        votes.push(record);
+        setVotes(votes);
+
+        showStatus(`Voto registrado. Acuse: ${hash}`, true);
         voteForm.reset();
+        spinner.classList.add('hidden');
         btn.disabled = false; btn.textContent = t;
-      }, 300);
+        confirmDlg.close();
+
+        // Mostrar recibo
+        const fecha = new Date(record.ts).toLocaleString();
+        $('#r-eleccion').textContent  = ELECTION_ID;
+        $('#r-fecha').textContent     = fecha;
+        $('#r-nombre').textContent    = data.nombre;
+        $('#r-email').textContent     = data.email;
+        $('#r-candidato').textContent = data.candidato;
+        $('#r-hash').textContent      = hash;
+        $('#recibo').classList.remove('hidden');
+
+        // Botones del recibo
+        $('#btnImprimir').onclick = () => window.print();
+        $('#btnCopiar').onclick = async () => {
+          try { await navigator.clipboard.writeText(hash); showStatus('Hash copiado al portapapeles ✅', true); }
+          catch { showStatus('No se pudo copiar el hash.', false); }
+        };
+        const txt = buildTxtContent({
+          nombre: data.nombre, email: data.email, candidato: data.candidato,
+          hash, eleccion: ELECTION_ID, fecha
+        });
+        const blob = new Blob([txt], {type:'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = $('#btnDescargar');
+        a.href = url;
+
+        // Actualiza “último acuse”
+        showLastVote();
+      };
     });
   </script>
 </body>
