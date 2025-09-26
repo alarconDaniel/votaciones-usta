@@ -4,79 +4,67 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sistema de Votaciones – USTA (DEV)</title>
-
-  <!-- Tailwind vía CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script> tailwind.config = { darkMode: 'class' } </script>
-
   <meta name="description" content="Demo Frontend del SVES (Development).">
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
-
-  <!-- NAV -->
   <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <a href="./" class="font-semibold">USTA – Votaciones (DEV)</a>
-
       <div class="flex items-center gap-4">
         <a href="./" class="text-sm hover:underline">Inicio</a>
+        <a href="#auth" class="text-sm hover:underline">Login/Registro</a>
         <a href="./votacion.html" class="text-sm hover:underline">Votación</a>
         <div class="flex items-center gap-3">
-          <input id="search" type="search" placeholder="Buscar..."
-                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring focus:ring-blue-200 dark:focus:ring-blue-500/30" />
-          <button id="themeBtn"
-                  class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">
-            Tema
-          </button>
+          <input id="search" type="search" placeholder="Buscar..." class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
+          <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">Tema</button>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- BANNER DEMO -->
   <div class="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200 border-b border-amber-300 dark:border-amber-800">
-    <div class="max-w-5xl mx-auto px-4 py-2 text-sm">
-      Modo DEMO (sin backend). Interacciones solo en el navegador. ¡No es vinculante! ✨
-    </div>
+    <div class="max-w-5xl mx-auto px-4 py-2 text-sm">DEMO sin backend. Login/Registro simulados.</div>
   </div>
 
-  <!-- HERO -->
   <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
     <div class="max-w-5xl mx-auto px-4 py-16 text-center">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Logo_de_la_Santo_Tom%C3%A1s.svg/1200px-Logo_de_la_Santo_Tom%C3%A1s.svg.png"
-           alt="Logo USTA" class="mx-auto w-32 mb-6" />
-      <h1 class="text-3xl md:text-5xl font-bold">Sistema de Votaciones USTA</h1>
-      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">
-        Versión <span class="underline">Development</span>: estructura base y tema oscuro. Inspirado en SVES. 
-      </p>
-      <a href="./votacion.html"
-         class="inline-block mt-6 bg-white text-blue-700 dark:bg-slate-100 dark:text-blue-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md">
-         Ir a Votar
+      <h1 class="text-3xl md:text-5xl font-bold">SVES – Development</h1>
+      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">HU01/HU02: Registro y Login demo (bloqueo tras 3 intentos).</p>
+      <a href="#auth" class="inline-block mt-6 bg-white text-blue-700 dark:bg-slate-100 dark:text-blue-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md">
+        Abrir Login/Registro
       </a>
     </div>
   </header>
 
-  <!-- FEATURES -->
-  <section id="features" class="max-w-5xl mx-auto px-4 py-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Demo UI</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Base con Tailwind CDN, sin builds ni dependencias.</p>
-    </article>
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Tema Oscuro</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Toggle accesible para confort visual.</p>
-    </article>
-    <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Accesible</h3>
-      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Focus states y contraste de texto mejorados.</p>
-    </article>
+  <!-- AUTH MOCK -->
+  <section id="auth" class="max-w-5xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-6">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+      <h2 class="text-lg font-semibold text-blue-700 dark:text-blue-400">Registro (institucional)</h2>
+      <form id="registerForm" class="mt-4 grid gap-3">
+        <input name="identificacion" required placeholder="Identificación" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="email" required type="email" placeholder="Correo @usta.edu.co" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="password" required type="password" minlength="8" placeholder="Contraseña (≥8)" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Crear cuenta</button>
+      </form>
+      <p id="regMsg" class="mt-2 text-sm"></p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+      <h2 class="text-lg font-semibold text-blue-700 dark:text-blue-400">Login</h2>
+      <form id="loginForm" class="mt-4 grid gap-3">
+        <input name="email" required type="email" placeholder="Correo institucional" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="password" required type="password" placeholder="Contraseña" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Ingresar</button>
+      </form>
+      <p id="loginMsg" class="mt-2 text-sm"></p>
+    </div>
   </section>
 
-  <!-- CONTACTO -->
   <section class="max-w-2xl mx-auto px-4 pb-16">
     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
       <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Contacto</h2>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Formulario demostrativo.</p>
       <form id="contactForm" class="mt-4 grid gap-4" data-form="contacto">
         <input name="nombre" required placeholder="Tu nombre" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2" />
         <input name="email" type="email" required placeholder="Tu email" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2" />
@@ -87,10 +75,9 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="border-t border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
-      <span>© <span id="year"></span> Sistema de Votaciones USTA (DEV)</span>
+      <span>© <span id="year"></span> SVES (DEV)</span>
       <a class="hover:underline" href="https://tailwindcss.com/docs" target="_blank" rel="noreferrer">Tailwind Docs</a>
     </div>
   </footer>

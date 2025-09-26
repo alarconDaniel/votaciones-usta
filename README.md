@@ -23,3 +23,13 @@ Este branch contiene la base del Frontend y utilidades mínimas de interacción 
 - Es estático: *no hay build step*.
 
 > Basado en el documento **Estudio de caso: SVES** (requisitos, épicas y lineamientos de seguridad/UX). :contentReference[oaicite:1]{index=1}
+
+# Development – HU01/HU02 (Login/Registro DEMO)
+
+Se agregan pantallas **Login/Registro** (mock) alineadas con HU01/HU02:
+- **Registro**: solo email institucional `*@usta.edu.co` (validación demo).
+- **Login**: bloqueo tras 3 intentos fallidos (demo).
+- Persistencia ligera en `localStorage` (usuarios demo).
+
+> Referencia de requisitos y RNF (autenticación, bloqueo, expiración): Estudio SVES. :contentReference[oaicite:2]{index=2}
+
