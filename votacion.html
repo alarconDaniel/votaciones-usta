@@ -3,34 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Votación – Sistema USTA</title>
-
-  <!-- Tailwind vía CDN -->
+  <title>Votación – USTA (TEST)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class'
-    }
-  </script>
-
-  <meta name="description" content="Página de votación del Sistema de Votaciones USTA.">
+  <script>tailwind.config={darkMode:'class'}</script>
+  <meta name="description" content="Página de pruebas para el formulario de votación.">
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
+
+  <!-- BANNER TEST -->
+  <div class="bg-yellow-100 dark:bg-yellow-900/30 border-b border-yellow-300 dark:border-yellow-800">
+    <div class="max-w-5xl mx-auto px-4 py-2 text-xs sm:text-sm">
+      ⚠️ PRUEBAS: esta página aplica latencia simulada configurada en la portada.
+    </div>
+  </div>
 
   <!-- NAV -->
   <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a class="font-semibold" href="./">USTA – Votaciones</a>
-
+      <a class="font-semibold" href="./">USTA – Votaciones (TEST)</a>
       <div class="flex items-center gap-4">
         <a href="./" class="text-sm hover:underline">Inicio</a>
         <a href="./votacion.html" class="text-sm underline font-semibold">Votación</a>
-
         <div class="flex items-center gap-3">
           <input id="search" type="search" placeholder="Buscar..."
-                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring focus:ring-blue-200 dark:focus:ring-blue-500/30">
+                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
           <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">
-            Cambiar tema
+            Tema
           </button>
         </div>
       </div>
@@ -38,73 +36,61 @@
   </nav>
 
   <!-- HERO -->
-  <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
-    <div class="max-w-5xl mx-auto px-4 py-16 text-center">
-      <!-- Logo USTA -->
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Logo_de_la_Santo_Tom%C3%A1s.svg/1200px-Logo_de_la_Santo_Tom%C3%A1s.svg.png"
-           alt="Logo USTA" class="mx-auto w-40 md:w-56 lg:w-64 mb-6" />
-
-      <h1 class="text-3xl md:text-5xl font-bold">Votaciones USTA</h1>
-      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">
-        Participa en el proceso democrático institucional. Tu voz fortalece la comunidad Tomasina.
-      </p>
+  <header class="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white dark:from-indigo-700 dark:to-indigo-900">
+    <div class="max-w-5xl mx-auto px-4 py-12 text-center">
+      <h1 class="text-3xl md:text-5xl font-bold">Formulario de Votación (TEST)</h1>
+      <p class="mt-3 text-indigo-100/90 max-w-2xl mx-auto">Prueba de funcionalidad: validaciones y estados.</p>
     </div>
   </header>
 
-  <!-- FORMULARIO -->
+  <!-- FORM -->
   <section class="max-w-2xl mx-auto px-4 pb-16 mt-10">
     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Formulario de votación</h2>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-        Completa tus datos y selecciona el candidato de tu preferencia.
-      </p>
-
-      <form id="voteForm" class="mt-4 grid gap-4" data-form="votacion">
-        <input name="nombre" required placeholder="Tu nombre"
-               class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 
-                      text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 
-                      rounded-lg px-3 py-2">
-
-        <input name="email" type="email" required placeholder="Tu email institucional"
-               class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 
-                      text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 
-                      rounded-lg px-3 py-2">
-
-        <input name="cedula" type="number" required placeholder="Tu cédula"
-               class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 
-                      text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 
-                      rounded-lg px-3 py-2">
-
-        <!-- Select de candidatos -->
-        <select name="candidato" required
-                class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 
-                       text-slate-800 dark:text-slate-100 rounded-lg px-3 py-2">
+      <h2 class="text-xl font-semibold text-indigo-700 dark:text-indigo-400">Formulario (demo)</h2>
+      <form id="voteForm" class="mt-4 grid gap-4" data-form="votacion" data-testid="vote-form">
+        <input name="nombre" required placeholder="Tu nombre" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="email" type="email" required placeholder="Tu email institucional" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <input name="cedula" type="number" required placeholder="Tu cédula" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
+        <select name="candidato" required class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
           <option value="">Selecciona un candidato</option>
-          <option value="Candidato A">Candidato A – Facultad de Ingeniería</option>
-          <option value="Candidato B">Candidato B – Facultad de Derecho</option>
-          <option value="Candidato C">Candidato C – Facultad de Ciencias Económicas</option>
+          <option value="Candidato A">Candidato A – Ingeniería</option>
+          <option value="Candidato B">Candidato B – Derecho</option>
+          <option value="Candidato C">Candidato C – Económicas</option>
         </select>
-
-        <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">
-          Enviar voto
-        </button>
+        <button class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-4 py-2 w-fit" data-testid="vote-submit">Enviar voto (demo)</button>
       </form>
-
       <p id="statusMsg" class="mt-3 text-sm"></p>
-
-      <!-- Resultado local (si ya votaste) -->
-      <div id="lastVote" class="mt-4 text-sm text-slate-600 dark:text-slate-300 hidden"></div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="border-t border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
-      <span>© <span id="year"></span> Sistema de Votaciones USTA</span>
+      <span>© <span id="year"></span> SVES (TEST)</span>
       <a class="hover:underline" href="https://tailwindcss.com/docs" target="_blank" rel="noreferrer">Tailwind Docs</a>
     </div>
   </footer>
 
   <script src="./script.js"></script>
+  <script>
+    // Interceptar envío con latencia
+    (function(){
+      const form = document.getElementById('voteForm');
+      const msg = document.getElementById('statusMsg');
+      function getLatency(){ const el = parent?.document?.getElementById('latencyMs'); return parseInt(el?.value||'0',10)||0; }
+      function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+      form?.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const btn = form.querySelector('button'); const t=btn.textContent;
+        btn.disabled=true; btn.textContent='Enviando… (simulado)';
+        await sleep(getLatency());
+        msg.textContent='Prueba de funcionalidad: voto simulado registrado (no persistente).';
+        msg.className='mt-3 text-sm text-green-700';
+        btn.disabled=false; btn.textContent=t;
+        form.reset();
+        console.log('[TEST] voto demo OK');
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -1,31 +1,50 @@
-// Interacciones de ejemplo
+// TEST – utilidades de QA y latencia simulada
 const themeBtn = document.getElementById('themeBtn');
 const root = document.documentElement;
 const statusMsg = document.getElementById('statusMsg');
 const contactForm = document.getElementById('contactForm');
 const yearSpan = document.getElementById('year');
+const latencyInput = document.getElementById('latencyMs');
 
-yearSpan.textContent = new Date().getFullYear();
+// Año dinámico
+if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-// Alternar tema claro/oscuro con una clase en <html>
+// Tema claro/oscuro
 themeBtn?.addEventListener('click', () => {
   document.body.classList.toggle('dark');
-  // Tailwind modo simple: usamos utilidades condicionales cuando hay clase 'dark' en body
-  if (document.body.classList.contains('dark')) {
-    root.style.setProperty('color-scheme', 'dark');
-    document.body.classList.add('bg-slate-900', 'text-slate-100');
-  } else {
-    root.style.setProperty('color-scheme', 'light');
-    document.body.classList.remove('bg-slate-900', 'text-slate-100');
-  }
+  const dark = document.body.classList.contains('dark');
+  root.style.setProperty('color-scheme', dark ? 'dark' : 'light');
 });
 
-// Formulario de ejemplo (solo front, sin backend)
-contactForm?.addEventListener('submit', (e) => {
-  e.preventDefault(); // esto es para demo, no envía realmente
+// Latencia simulada (ms)
+function getLatency() {
+  const ms = parseInt(latencyInput?.value || '0', 10);
+  return Number.isFinite(ms) && ms >= 0 ? ms : 0;
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// Log local y consola
+function testLog(ev, detail={}) {
+  const entry = { ts: new Date().toISOString(), ev, detail };
+  console.log('[TEST]', entry);
+  const key = 'test_logs';
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  arr.push(entry);
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+
+// Form demo con latencia artificial
+contactForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  testLog('contact_submit:start', {});
+  const btn = contactForm.querySelector('button');
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Enviando… (simulado)';
   const data = Object.fromEntries(new FormData(contactForm).entries());
-  // Simula un envío
-  statusMsg.textContent = `¡Gracias, ${data.nombre}! Tu mensaje fue recibido (demo).`;
-  statusMsg.className = 'text-green-700';
+  await sleep(getLatency());
+  statusMsg.textContent = `Prueba de funcionalidad: recibido para ${data.nombre} (demo).`;
+  statusMsg.className = 'mt-3 text-sm text-green-700';
+  btn.disabled = false; btn.textContent = orig;
   contactForm.reset();
+  testLog('contact_submit:done', { email: data.email });
 });
