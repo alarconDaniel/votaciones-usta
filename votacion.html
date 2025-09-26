@@ -12,14 +12,9 @@
         const saved = localStorage.getItem('theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const useDark = saved ? (saved === 'dark') : prefersDark;
-        const root = document.documentElement;
-        if (useDark) {
-          root.classList.add('dark');
-          root.style.setProperty('color-scheme', 'dark');
-        } else {
-          root.classList.remove('dark');
-          root.style.setProperty('color-scheme', 'light');
-        }
+        const root = document.documentElement; // <html>
+        root.classList.toggle('dark', useDark);
+        root.style.setProperty('color-scheme', useDark ? 'dark' : 'light');
       } catch (_) {}
     })();
   </script>
@@ -148,7 +143,7 @@
       </div>
 
       <!-- Último acuse rápido -->
-      <div id="lastVote" class="mt-4 text-xs text-slate-500 dark:text-slate-4 hidden"></div>
+      <div id="lastVote" class="mt-4 text-xs text-slate-500 dark:text-slate-400 hidden"></div>
     </section>
   </main>
 
@@ -160,41 +155,10 @@
     </div>
   </footer>
 
-  <!-- Lógica principal: usa utilidades exportadas de script.js -->
+  <!-- Lógica principal: importa utilidades desde script.js -->
   <script type="module">
-    // --- Import dinámico de utilidades compartidas
-    let sha256, getVotes, setVotes;
-    const ELECTION_ID = 'CE-2025';
-    const LS_VOTES = `votes_${ELECTION_ID}`; // [{email, candidato, hash_anonimo, ts}]
+    import { sha256, getVotes, setVotes } from './script.js';
 
-    try {
-      // Importa el módulo (esto también inicializa y enlaza el tema persistente)
-      const mod = await import('./script.js');
-      sha256 = mod.sha256;
-      getVotes = mod.getVotes;
-      setVotes = mod.setVotes;
-    } catch (e) {
-      // Fallback local si no existe módulo: mantiene la cabina autosuficiente
-      sha256 = async function(text) {
-        const data = new TextEncoder().encode(text);
-        const hash = await crypto.subtle.digest('SHA-256', data);
-        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-      };
-      getVotes = function() { return JSON.parse(localStorage.getItem(LS_VOTES) || '[]'); };
-      setVotes = function(arr) { localStorage.setItem(LS_VOTES, JSON.stringify(arr)); };
-
-      // Pequeña inicialización de tema en fallback
-      (function () {
-        const root = document.documentElement;
-        const saved = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
-        const useDark = saved ? (saved === 'dark') : prefersDark;
-        root.classList.toggle('dark', useDark);
-        root.style.setProperty('color-scheme', useDark ? 'dark' : 'light');
-      })();
-    }
-
-    // --- Helpers de UI ---
     const $ = (sel) => document.querySelector(sel);
     const voteForm   = $('#voteForm');
     const statusMsg  = $('#statusMsg');
@@ -204,6 +168,8 @@
     const confirmYes = $('#confirmYes');
     const lastVoteEl = $('#lastVote');
     const yearSpan   = $('#year');
+
+    const ELECTION_ID = 'CE-2025';
 
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
@@ -268,7 +234,7 @@
 
       // Confirmación
       confirmYes.onclick = async () => {
-        spinner.classList.remove('hidden');
+        spinner?.classList.remove('hidden');
         const btn = voteForm.querySelector('button');
         const t = btn.textContent;
         btn.disabled = true; btn.textContent = 'Registrando…';
@@ -281,7 +247,7 @@
 
         showStatus(`Voto registrado. Acuse: ${hash}`, true);
         voteForm.reset();
-        spinner.classList.add('hidden');
+        spinner?.classList.add('hidden');
         btn.disabled = false; btn.textContent = t;
         confirmDlg.close();
 

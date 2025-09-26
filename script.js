@@ -1,52 +1,55 @@
-// Final deploy: tema persistente, navbar móvil, contacto, utilidades de voto (compartidas)
+// --- script.js (ESM) ---
+// Selector por id
 const $ = (id) => document.getElementById(id);
-const themeBtn = $('themeBtn');
-const mThemeBtn = $('m_themeBtn');
-const menuBtn = $('menuBtn');
-const mobileMenu = $('mobileMenu');
-const statusMsg = $('statusMsg');
-const contactForm = $('contactForm');
-const yearSpan = $('year');
 
+// Controles (no todos existen en todas las páginas)
+const themeBtn   = $('themeBtn');
+const mThemeBtn  = $('m_themeBtn');
+const menuBtn    = $('menuBtn');
+const mobileMenu = $('mobileMenu');
+const statusMsg  = $('statusMsg');
+const contactForm= $('contactForm');
+const yearSpan   = $('year');
+
+// Año actual en el footer
 if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-// ---- Tema persistente ----
+// ------- Tema persistente (usa <html>.dark coherente con anti-FOUC) -------
 function applyScheme(scheme) {
-  const root = document.documentElement;
-  if (scheme === 'dark') {
-    document.body.classList.add('dark');
-    root.style.setProperty('color-scheme', 'dark');
-    themeBtn?.setAttribute('aria-pressed', 'true');
-    mThemeBtn?.setAttribute('aria-pressed', 'true');
-  } else {
-    document.body.classList.remove('dark');
-    root.style.setProperty('color-scheme', 'light');
-    themeBtn?.setAttribute('aria-pressed', 'false');
-    mThemeBtn?.setAttribute('aria-pressed', 'false');
-  }
+  const root = document.documentElement; // <html>
+  const isDark = scheme === 'dark';
+  root.classList.toggle('dark', isDark);
+  root.style.setProperty('color-scheme', isDark ? 'dark' : 'light');
+  themeBtn?.setAttribute('aria-pressed', String(isDark));
+  mThemeBtn?.setAttribute('aria-pressed', String(isDark));
 }
+
 (function initTheme() {
   const saved = localStorage.getItem('theme');
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
   applyScheme(saved || (prefersDark ? 'dark' : 'light'));
 })();
+
 function toggleTheme() {
-  const isDark = document.body.classList.contains('dark');
+  const root = document.documentElement;
+  const isDark = root.classList.contains('dark');
   const next = isDark ? 'light' : 'dark';
   localStorage.setItem('theme', next);
   applyScheme(next);
 }
+
 themeBtn?.addEventListener('click', toggleTheme);
 mThemeBtn?.addEventListener('click', toggleTheme);
 
-// ---- Navbar móvil ----
+// ------- Navbar móvil -------
 menuBtn?.addEventListener('click', () => {
+  if (!mobileMenu) return;
   const isOpen = !mobileMenu.classList.contains('hidden');
   mobileMenu.classList.toggle('hidden');
   menuBtn.setAttribute('aria-expanded', String(!isOpen));
 });
 
-// ---- Contacto (demo) ----
+// ------- Contacto (demo) -------
 contactForm?.addEventListener('submit', (e) => {
   e.preventDefault();
   const btn = contactForm.querySelector('button');
@@ -67,17 +70,22 @@ contactForm?.addEventListener('submit', (e) => {
   }, 300);
 });
 
-// ---- Utilidades de voto (compartidas con votación) ----
+// ------- Utilidades de voto (compartidas con votación) -------
 const ELECTION_ID = 'CE-2025';
 const LS_VOTES = `votes_${ELECTION_ID}`; // [{email, candidato, hash_anonimo, ts}]
+
 export async function sha256(text) {
   const data = new TextEncoder().encode(text);
   const hash = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
+
 export function getVotes() {
   return JSON.parse(localStorage.getItem(LS_VOTES) || '[]');
 }
+
 export function setVotes(arr) {
   localStorage.setItem(LS_VOTES, JSON.stringify(arr));
 }
