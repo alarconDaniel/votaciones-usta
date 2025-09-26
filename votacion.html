@@ -9,12 +9,14 @@
   <meta name="description" content="Votación segura (demo) con confirmación y hash.">
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
+  <!-- Navbar -->
   <nav class="sticky top-0 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <a class="font-semibold" href="./">USTA – Votaciones (DEV)</a>
       <div class="flex items-center gap-4">
         <a href="./" class="text-sm hover:underline">Inicio</a>
         <a href="./votacion.html" class="text-sm underline font-semibold">Votación</a>
+        <div id="userBox" class="hidden items-center gap-2 text-sm"></div>
         <div class="flex items-center gap-3">
           <input id="search" type="search" placeholder="Buscar..." class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
           <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">Tema</button>
@@ -23,6 +25,7 @@
     </div>
   </nav>
 
+  <!-- Hero -->
   <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
     <div class="max-w-5xl mx-auto px-4 py-12 text-center">
       <h1 class="text-3xl md:text-5xl font-bold">Votación – Confirmación + Hash</h1>
@@ -30,6 +33,7 @@
     </div>
   </header>
 
+  <!-- Formulario -->
   <section class="max-w-2xl mx-auto px-4 pb-16 mt-10">
     <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
       <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Formulario</h2>
@@ -46,6 +50,7 @@
         <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Confirmar y Enviar</button>
       </form>
 
+      <!-- Diálogo de confirmación -->
       <dialog id="confirmDlg" class="rounded-xl p-0 w-full max-w-md">
         <form method="dialog" class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
           <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
@@ -67,6 +72,7 @@
     </div>
   </section>
 
+  <!-- Footer -->
   <footer class="border-t border-slate-200 dark:border-slate-700">
     <div class="max-w-5xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
       <span>© <span id="year"></span> SVES (DEV)</span>
