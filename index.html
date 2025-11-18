@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sistema de Votaciones – USTA</title>
+  <title>Sistema de Votaciones – USTA Jira</title>
+
+  <!-- Fuente Inter para un look más profesional -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <!-- Anti-FOUC: aplica tema antes de cargar Tailwind -->
   <script>
@@ -12,135 +17,270 @@
         const saved = localStorage.getItem('theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const useDark = saved ? (saved === 'dark') : prefersDark;
-        const root = document.documentElement; // <html>
+        const root = document.documentElement;
         root.classList.toggle('dark', useDark);
         root.style.setProperty('color-scheme', useDark ? 'dark' : 'light');
       } catch (_) {}
     })();
   </script>
 
-  <!-- Tailwind -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            usta: {
+              blue: '#0033A0', // Aproximación azul institucional
+              gold: '#CCA300',
+            }
+          }
+        }
+      }
+    }
+  </script>
 
-  <meta name="description" content="Frontend productivo del Sistema de Votaciones USTA: accesible, responsive y listo para deploy." />
-  <meta property="og:title" content="Sistema de Votaciones – USTA" />
-  <meta property="og:description" content="Cabina demo con confirmación, hash SHA-256 y recibo imprimible (sin backend)." />
-  <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#0b5bd3" />
-  <link rel="icon" href="https://fav.farm/✅" />
+  <meta name="description" content="Frontend productivo del Sistema de Votaciones USTA." />
   <style>
-    .fade-in { animation: fade .6s ease-out both }
-    @keyframes fade { from {opacity:.0; transform:translateY(6px)} to {opacity:1; transform:none} }
-    .shine { background: linear-gradient(110deg, rgba(255,255,255,.18) 8%, rgba(255,255,255,.06) 18%, rgba(255,255,255,0) 33%); background-size: 200% 100%; animation: shine 2.4s linear infinite }
-    @keyframes shine { to { background-position-x: -200% } }
+    /* Animaciones personalizadas */
+    .fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+
+    /* Patrón de fondo sutil */
+    .bg-grid-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
-  <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-blue-600 text-white px-3 py-1 rounded">
+<body class="bg-slate-50 text-slate-800 dark:bg-[#0f172a] dark:text-slate-100 font-sans transition-colors duration-300">
+  
+  <!-- Salto al contenido (Accesibilidad) -->
+  <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 font-medium">
     Saltar al contenido
   </a>
 
   <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between" role="navigation" aria-label="Principal">
-      <a href="./" class="font-semibold">USTA – Votaciones</a>
+  <nav class="sticky top-0 z-50 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Logo / Brand -->
+        <a href="./" class="flex items-center gap-2 group">
+            <div class="bg-blue-700 text-white p-1.5 rounded-lg group-hover:bg-blue-600 transition-colors">
+                <!-- Icono simple de urna/voto -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+            </div>
+            <span class="font-bold text-lg tracking-tight text-slate-800 dark:text-white">Votaciones <span class="text-blue-700 dark:text-blue-400">USTA</span></span>
+        </a>
 
-      <div class="hidden md:flex items-center gap-4">
-        <a href="./" class="text-sm hover:underline">Inicio</a>
-        <a href="./votacion.html" class="text-sm hover:underline">Votación</a>
-        <div class="flex items-center gap-3">
-          <input id="search" type="search" placeholder="Buscar..."
-                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring focus:ring-blue-200 dark:focus:ring-blue-500/30"
-                 aria-label="Buscar en el sitio" />
-          <button id="themeBtn"
-                  class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
-                  aria-pressed="false" aria-label="Cambiar tema">
-            Tema
-          </button>
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-6">
+          <a href="./" class="text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-colors">Inicio</a>
+          <a href="./votacion.html" class="text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-colors">Votación</a>
+          
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
+
+          <div class="flex items-center gap-3">
+            <div class="relative group">
+                <input id="search" type="search" placeholder="Buscar..."
+                    class="pl-9 pr-4 py-1.5 text-sm bg-slate-100 dark:bg-slate-800 border-transparent focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 rounded-full transition-all w-40 focus:w-56 outline-none ring-1 ring-transparent focus:ring-blue-500/20 text-slate-700 dark:text-slate-200 placeholder-slate-400"
+                    aria-label="Buscar" />
+                <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+
+            <button id="themeBtn"
+              class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Cambiar tema">
+              <!-- Icono Sol/Luna -->
+              <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+              <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <button id="menuBtn" class="md:hidden px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600" aria-expanded="false" aria-controls="mobileMenu">
-        Menú
-      </button>
+        <!-- Mobile Button -->
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800" aria-expanded="false">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
     </div>
 
-    <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/90">
-      <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-3">
-        <a href="./" class="text-sm hover:underline">Inicio</a>
-        <a href="./votacion.html" class="text-sm hover:underline">Votación</a>
-        <div class="flex items-center gap-3">
-          <input id="m_search" type="search" placeholder="Buscar..."
-                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5">
-          <button id="m_themeBtn" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600">Tema</button>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a]">
+      <div class="px-4 py-4 space-y-4">
+        <a href="./" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600">Inicio</a>
+        <a href="./votacion.html" class="block text-base font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600">Votación</a>
+        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+          <input id="m_search" type="search" placeholder="Buscar..." class="w-full border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 rounded-lg px-3 py-2 text-sm">
+          <button id="m_themeBtn" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium">Tema</button>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <header class="relative overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none shine"></div>
-    <div class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
-      <div class="max-w-6xl mx-auto px-4 py-16 text-center">
-        <!-- Logo USTA -->
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Logo_de_la_Santo_Tom%C3%A1s.svg/1200px-Logo_de_la_Santo_Tom%C3%A1s.svg.png"
-             alt="Logo USTA" class="mx-auto w-73 mb-6" />
-        <h1 class="text-3xl md:text-5xl font-bold fade-in">Sistema de Votaciones USTA</h1>
-        <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto fade-in" style="animation-delay:.08s">
-          Interfaz productiva, accesible y elegante. Lista para despliegue gratuito en Pages/Netlify.
+  <!-- HERO SECTION -->
+  <header class="relative overflow-hidden bg-blue-700 dark:bg-blue-900">
+    <!-- Elementos decorativos de fondo -->
+    <div class="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-blue-800/90 dark:to-[#0f172a] pointer-events-none"></div>
+    
+    <!-- Contenido -->
+    <div class="relative max-w-5xl mx-auto px-4 pt-20 pb-24 text-center">
+      <div class="fade-in-up">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Logo_de_la_Santo_Tom%C3%A1s.svg/1200px-Logo_de_la_Santo_Tom%C3%A1s.svg.png" 
+             alt="Logo USTA" 
+             class="mx-auto h-32 w-auto object-contain mb-8 drop-shadow-xl filter brightness-100 dark:brightness-110" />
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-6 drop-shadow-sm">
+          Sistema de Votaciones <span class="text-blue-200">Institucionales</span>
+        </h1>
+        
+        <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+          Una plataforma segura, accesible y transparente para la comunidad Tomasina. Ejerce tu derecho al voto de manera digital.
         </p>
-        <a href="./votacion.html"
-           class="inline-block mt-6 bg-white text-blue-700 dark:bg-slate-100 dark:text-blue-900 font-medium px-5 py-2.5 rounded-xl shadow hover:shadow-md fade-in"
-           style="animation-delay:.16s">
-           Ir a Votar
-        </a>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="./votacion.html" 
+             class="inline-flex items-center justify-center px-8 py-3.5 text-base font-bold text-blue-700 bg-white rounded-xl shadow-[0_10px_20px_-10px_rgba(0,0,0,0.2)] hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-300">
+             Ir a la Cabina de Votación
+             <svg class="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+          </a>
+          <a href="#features" 
+             class="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-white border border-blue-400/30 bg-blue-600/20 backdrop-blur-sm rounded-xl hover:bg-blue-600/30 transition-all duration-300">
+             Más información
+          </a>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- CONTENIDO -->
-  <main id="contenido" class="max-w-6xl mx-auto px-4">
-    <section id="features" class="py-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 fade-in">
-        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Confirmación</h3>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Antes de registrar, la cabina solicita confirmar los datos (demo).</p>
+  <!-- MAIN CONTENT -->
+  <main id="contenido" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-10 mb-20">
+    
+    <!-- Features Grid -->
+    <section id="features" class="grid md:grid-cols-3 gap-6 mb-20">
+      <!-- Card 1 -->
+      <article class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700/50 hover:border-blue-500/30 dark:hover:border-blue-500/30 transition-all duration-300 hover:-translate-y-1 fade-in-up delay-100 group">
+        <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="font-bold text-xl text-slate-800 dark:text-white mb-2">Confirmación Segura</h3>
+        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Antes de registrar tu decisión, la cabina solicita una doble validación de los datos para evitar errores en el proceso.</p>
       </article>
-      <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 fade-in" style="animation-delay:.05s">
-        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Acuse (hash)</h3>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Se genera un <strong>SHA-256</strong> local como comprobante (demo).</p>
+
+      <!-- Card 2 -->
+      <article class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700/50 hover:border-blue-500/30 dark:hover:border-blue-500/30 transition-all duration-300 hover:-translate-y-1 fade-in-up delay-200 group">
+        <div class="w-12 h-12 bg-purple-50 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400 mb-4 group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        </div>
+        <h3 class="font-bold text-xl text-slate-800 dark:text-white mb-2">Acuse Cifrado (Hash)</h3>
+        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Se genera un código <strong>SHA-256</strong> único y local como comprobante inmutable de tu participación en el sistema.</p>
       </article>
-      <article class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 fade-in" style="animation-delay:.1s">
-        <h3 class="font-semibold text-lg text-blue-700 dark:text-blue-400">Voto único</h3>
-        <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Se bloquea el doble voto por email institucional en la elección actual (local).</p>
+
+      <!-- Card 3 -->
+      <article class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700/50 hover:border-blue-500/30 dark:hover:border-blue-500/30 transition-all duration-300 hover:-translate-y-1 fade-in-up delay-300 group">
+        <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        </div>
+        <h3 class="font-bold text-xl text-slate-800 dark:text-white mb-2">Validación de Voto Único</h3>
+        <p class="text-slate-600 dark:text-slate-400 leading-relaxed">El sistema bloquea intentos de doble votación verificando el correo institucional contra la elección activa.</p>
       </article>
     </section>
 
-    <section class="max-w-2xl pb-16 mx-auto">
-      <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-        <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Contacto</h2>
-        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Demo sin backend.</p>
-        <form id="contactForm" class="mt-4 grid gap-4" data-form="contacto" aria-describedby="statusMsg">
-          <input name="nombre" required placeholder="Tu nombre" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-          <input name="email" type="email" required placeholder="Tu email" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-          <textarea name="mensaje" rows="4" required placeholder="Tu mensaje" class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2"></textarea>
-          <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">Enviar</button>
-        </form>
-        <p id="statusMsg" class="mt-3 text-sm" aria-live="polite"></p>
+    <!-- Contact Section -->
+    <section class="max-w-4xl mx-auto fade-in-up delay-200">
+      <div class="bg-white dark:bg-slate-800 rounded-3xl p-1 shadow-xl shadow-slate-200/60 dark:shadow-none overflow-hidden border border-slate-200 dark:border-slate-700">
+        <div class="grid md:grid-cols-5 gap-0">
+            
+            <!-- Left Side (Info) -->
+            <div class="md:col-span-2 bg-slate-50 dark:bg-slate-800/50 p-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-700">
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-4">Contacto y Soporte</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-sm mb-6">
+                    Esta es una versión demo del frontend. Si tienes problemas técnicos o dudas sobre el proceso electoral, envíanos un mensaje.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center text-sm text-slate-500 dark:text-slate-400">
+                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        soporte@usta.edu.co (Demo)
+                    </div>
+                    <div class="flex items-center text-sm text-slate-500 dark:text-slate-400">
+                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                        Campus Tunja / Bogotá
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side (Form) -->
+            <div class="md:col-span-3 p-8 bg-white dark:bg-slate-800">
+                <form id="contactForm" class="space-y-5" data-form="contacto" aria-describedby="statusMsg">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Nombre</label>
+                            <input name="nombre" required placeholder="Tu nombre" 
+                                class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white">
+                        </div>
+                        <div class="col-span-2 sm:col-span-1">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Email</label>
+                            <input name="email" type="email" required placeholder="tu@correo.usta.edu.co" 
+                                class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Mensaje</label>
+                        <textarea name="mensaje" rows="4" required placeholder="Describe tu solicitud..." 
+                            class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white"></textarea>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <p id="statusMsg" class="text-sm text-slate-500 dark:text-slate-400 font-medium" aria-live="polite"></p>
+                        <button class="bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg px-6 py-2.5 transition-colors shadow-lg shadow-blue-500/30 flex items-center gap-2">
+                            <span>Enviar mensaje</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
       </div>
     </section>
+
   </main>
 
-  <footer class="border-t border-slate-200 dark:border-slate-700">
-    <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
-      <span>© <span id="year"></span> Sistema de Votaciones USTA</span>
-      <a class="hover:underline" href="https://tailwindcss.com/docs" target="_blank" rel="noreferrer">Tailwind Docs</a>
+  <!-- FOOTER -->
+  <footer class="bg-slate-50 dark:bg-[#0B1120] border-t border-slate-200 dark:border-slate-800 pt-12 pb-8">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <div class="text-center md:text-left">
+        <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+            <div class="w-6 h-6 bg-blue-700 rounded flex items-center justify-center text-white text-xs font-bold">U</div>
+            <span class="font-bold text-slate-700 dark:text-slate-200">Votaciones USTA</span>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          © <span id="year"></span> Universidad Santo Tomás. <br class="sm:hidden">Todos los derechos reservados.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="#" class="text-slate-400 hover:text-blue-600 transition-colors"><span class="sr-only">Facebook</span><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>
+        <a href="#" class="text-slate-400 hover:text-blue-600 transition-colors"><span class="sr-only">Twitter</span><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+      </div>
     </div>
   </footer>
 
-  <!-- script.js como MÓDULO -->
+  <!-- script.js como MÓDULO (Sin cambios, solo referencia) -->
   <script type="module" src="./script.js"></script>
 </body>
 </html>
-  
