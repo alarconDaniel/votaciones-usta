@@ -3,171 +3,289 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Votación – USTA (FINAL)</title>
+  <title>Cabina de Votación – USTA</title>
 
-  <!-- Anti-FOUC: aplica tema antes de cargar Tailwind -->
+  <!-- Fuente Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Anti-FOUC -->
   <script>
     (function() {
       try {
         const saved = localStorage.getItem('theme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const useDark = saved ? (saved === 'dark') : prefersDark;
-        const root = document.documentElement; // <html>
+        const root = document.documentElement;
         root.classList.toggle('dark', useDark);
         root.style.setProperty('color-scheme', useDark ? 'dark' : 'light');
       } catch (_) {}
     })();
   </script>
 
-  <!-- Tailwind por CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
-
-  <meta name="description" content="Cabina de votación demo: confirmación, acuse SHA-256 y recibo imprimible. Sin backend." />
-  <style>
-    @media print {
-      nav, header, footer, .no-print { display: none !important; }
-      #recibo { border: none; box-shadow: none; }
-      body { background: white !important; color: black !important; }
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            usta: { blue: '#0033A0', gold: '#CCA300' }
+          }
+        }
+      }
     }
-    .fade-in { animation: fade .5s ease-out both }
-    @keyframes fade { from {opacity:.0; transform:translateY(6px)} to {opacity:1; transform:none} }
-    .kbd { border:1px solid rgba(0,0,0,.2); border-bottom-width:2px; padding:.1rem .35rem; border-radius:.375rem; font-size:.8em }
+  </script>
+
+  <style>
+    /* Estilos para impresión y animaciones */
+    @media print {
+      nav, header, footer, .no-print, .image-side { display: none !important; }
+      #recibo { border: 1px solid #000 !important; box-shadow: none !important; margin: 0 !important; page-break-inside: avoid; }
+      body { background: white !important; color: black !important; }
+      #vote-card { box-shadow: none !important; border: none !important; }
+      .form-side { width: 100% !important; padding: 0 !important; }
+    }
+    
+    .fade-in { animation: fade .6s cubic-bezier(0.16, 1, 0.3, 1) both }
+    @keyframes fade { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:none} }
+    
+    .bg-grid-pattern {
+      background-image: radial-gradient(rgba(0, 51, 160, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .dark .bg-grid-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    }
+
+    /* Estilo personalizado para el scrollbar del modal si es muy largo */
+    dialog::backdrop {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+    }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
-  <a href="#voteForm" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-blue-600 text-white px-3 py-1 rounded">
+<body class="bg-slate-50 text-slate-800 dark:bg-[#0f172a] dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-300">
+  
+  <a href="#voteForm" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-50">
     Saltar al formulario
   </a>
 
-  <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/80 backdrop-blur border-b border-slate-200 dark:border-slate-700">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a class="font-semibold" href="./">USTA – Votaciones</a>
-      <div class="flex items-center gap-4">
-        <a href="./" class="text-sm hover:underline">Inicio</a>
-        <a href="./votacion.html" class="text-sm underline font-semibold">Votación</a>
-        <div class="flex items-center gap-3">
-          <input id="search" type="search" placeholder="Buscar..."
-                 class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm rounded-lg px-3 py-1.5"
-                 aria-label="Buscar en el sitio">
-          <button id="themeBtn" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600"
-                  aria-pressed="false" aria-label="Cambiar tema">
-            Tema
-          </button>
+  <!-- NAV (Consistente con Index) -->
+  <nav class="sticky top-0 z-50 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="./" class="flex items-center gap-2 group">
+            <div class="bg-blue-700 text-white p-1.5 rounded-lg group-hover:bg-blue-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+            </div>
+            <span class="font-bold text-lg tracking-tight text-slate-800 dark:text-white">Votaciones <span class="text-blue-700 dark:text-blue-400">USTA</span></span>
+        </a>
+        <div class="flex items-center gap-4">
+            <a href="./" class="text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300 transition-colors hidden sm:block">Inicio</a>
+            <div class="flex items-center gap-2">
+                <button id="themeBtn" class="p-2 rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" aria-label="Cambiar tema">
+                    <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <header class="bg-gradient-to-br from-blue-600 to-blue-800 text-white dark:from-blue-700 dark:to-blue-900">
-    <div class="max-w-6xl mx-auto px-4 py-12 text-center">
-      <h1 class="text-3xl md:text-5xl font-bold">Cabina de Votación</h1>
-      <p class="mt-3 text-blue-100/90 max-w-2xl mx-auto">Confirmación previa, acuse SHA-256 y bloqueo de doble voto (demo local).</p>
+  <!-- HEADER SIMPLE -->
+  <header class="bg-blue-700 dark:bg-blue-900 py-12 relative overflow-hidden">
+    <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">Cabina de Votación Digital</h1>
+        <p class="text-blue-100 max-w-xl mx-auto text-sm md:text-base font-light">
+            Sistema seguro con acuse de recibo SHA-256. <span class="inline-block bg-blue-600/50 rounded px-2 py-0.5 text-xs font-semibold border border-blue-400/30 ml-1">DEMO LOCAL</span>
+        </p>
     </div>
   </header>
 
-  <!-- FORMULARIO -->
-  <main class="max-w-2xl mx-auto px-4 pb-16 mt-10">
-    <section class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-      <h2 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Formulario de votación</h2>
-      <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
-        Completa los datos y confirma tu elección. <span class="kbd">Demo</span>
-      </p>
-
-      <form id="voteForm" class="mt-4 grid gap-4" aria-describedby="statusMsg">
-        <input name="nombre" required placeholder="Tu nombre"
-               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <input name="email" type="email" required placeholder="Tu email institucional @usta.edu.co"
-               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <input name="cedula" inputmode="numeric" required placeholder="Tu cédula"
-               class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-        <select name="candidato" required
-                class="border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2">
-          <option value="">Selecciona un candidato</option>
-          <option value="Candidato A">Candidato A – Ingeniería</option>
-          <option value="Candidato B">Candidato B – Derecho</option>
-          <option value="Candidato C">Candidato C – Económicas</option>
-        </select>
-        <div class="flex items-center gap-3">
-          <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 w-fit">
-            Confirmar y Enviar
-          </button>
-          <span id="spinner" class="hidden text-sm text-slate-500">Procesando…</span>
-        </div>
-      </form>
-
-      <p id="statusMsg" class="mt-3 text-sm" aria-live="polite"></p>
-
-      <!-- Confirmación -->
-      <dialog id="confirmDlg" class="rounded-xl p-0 w-full max-w-md">
-        <form method="dialog"
-              class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
-          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
-            <h3 class="font-semibold">Confirmar voto</h3>
-          </div>
-          <div class="px-6 py-4 text-sm">
-            <p id="confirmText" class="whitespace-pre-line"></p>
-          </div>
-          <div class="px-6 py-4 flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700">
-            <button value="cancel" class="px-3 py-1.5 rounded-lg border">Cancelar</button>
-            <button id="confirmYes" value="ok" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white">
-              Confirmar y Registrar
-            </button>
-          </div>
-        </form>
-      </dialog>
-
-      <!-- Recibo / Acuse -->
-      <div id="recibo" class="hidden mt-6 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
-        <h3 class="font-semibold text-blue-700 dark:text-blue-400">Recibo de voto (demo)</h3>
-        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-          Guarda o imprime este comprobante. No contiene datos sensibles; el hash sirve como acuse local.
-        </p>
-        <dl class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm">
-          <div><dt class="text-slate-500">Elección</dt><dd id="r-eleccion" class="font-medium">—</dd></div>
-          <div><dt class="text-slate-500">Fecha/Hora</dt><dd id="r-fecha" class="font-medium">—</dd></div>
-          <div><dt class="text-slate-500">Nombre</dt><dd id="r-nombre" class="font-medium">—</dd></div>
-          <div><dt class="text-slate-500">Email</dt><dd id="r-email" class="font-medium">—</dd></div>
-          <div class="sm:col-span-2 break-all"><dt class="text-slate-500">Candidato</dt><dd id="r-candidato" class="font-medium">—</dd></div>
-          <div class="sm:col-span-2 break-all"><dt class="text-slate-500">Hash (acuse)</dt><dd id="r-hash" class="font-mono text-xs sm:text-sm">—</dd></div>
-        </dl>
-        <div class="mt-4 flex flex-wrap gap-3 no-print">
-          <button id="btnImprimir" class="px-3 py-1.5 rounded-lg border">Imprimir</button>
-          <button id="btnCopiar" class="px-3 py-1.5 rounded-lg border">Copiar hash</button>
-          <a id="btnDescargar" download="acuse-usta.txt"
-             class="px-3 py-1.5 rounded-lg border inline-block"
-             href="#">Descargar .txt</a>
+  <!-- MAIN CONTENT -->
+  <main class="flex-grow -mt-8 px-4 pb-12 relative z-20">
+    <div id="vote-card" class="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/20 border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col md:flex-row fade-in">
+      
+      <!-- COLUMNA IZQUIERDA: IMAGEN -->
+      <div class="md:w-5/12 bg-slate-100 dark:bg-slate-900 relative min-h-[200px] md:min-h-0 image-side overflow-hidden group">
+        <!-- Imagen ilustrativa (Laptop/Votación) -->
+        <img 
+            src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1000&auto=format&fit=crop" 
+            alt="Estudiante votando digitalmente" 
+            class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700 ease-out"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/90 via-blue-900/40 to-transparent flex flex-col justify-end p-8 text-white">
+            <div class="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <h3 class="text-xl font-bold mb-2">Tu decisión cuenta</h3>
+                <p class="text-sm text-blue-100 leading-relaxed">
+                    Participa en la elección de representantes estudiantiles. El proceso es anónimo, seguro y verificable.
+                </p>
+            </div>
         </div>
       </div>
 
-      <!-- Último acuse rápido -->
-      <div id="lastVote" class="mt-4 text-xs text-slate-500 dark:text-slate-400 hidden"></div>
-    </section>
+      <!-- COLUMNA DERECHA: FORMULARIO -->
+      <div class="md:w-7/12 p-8 md:p-10 form-side">
+        
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <span class="w-2 h-8 bg-blue-600 rounded-full inline-block"></span>
+                Registro de Voto
+            </h2>
+            <div id="lastVote" class="hidden text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded border border-slate-200 dark:border-slate-600 max-w-[150px] truncate" title="Último hash generado"></div>
+        </div>
+
+        <form id="voteForm" class="space-y-5" aria-describedby="statusMsg">
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide ml-1">Nombre Completo</label>
+                    <input name="nombre" required placeholder="Ej. Juan Pérez"
+                        class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white placeholder:text-slate-400">
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide ml-1">Cédula</label>
+                    <input name="cedula" inputmode="numeric" required placeholder="Ej. 1001234567"
+                        class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white placeholder:text-slate-400">
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide ml-1">Email Institucional</label>
+                <div class="relative">
+                    <input name="email" type="email" required placeholder="usuario@usta.edu.co"
+                        class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white placeholder:text-slate-400">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide ml-1">Selecciona tu Candidato</label>
+                <div class="relative">
+                    <select name="candidato" required
+                        class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:text-white appearance-none cursor-pointer">
+                        <option value="">-- Selecciona una opción --</option>
+                        <option value="Candidato A">Candidato A – Ingeniería de Sistemas</option>
+                        <option value="Candidato B">Candidato B – Facultad de Derecho</option>
+                        <option value="Candidato C">Candidato C – Ciencias Económicas</option>
+                    </select>
+                    <svg class="w-4 h-4 text-slate-500 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </div>
+
+            <div class="pt-2 flex items-center gap-4">
+                <button type="submit" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-lg px-6 py-3 transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 flex items-center justify-center gap-2 group">
+                    <span>Confirmar y Votar</span>
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                </button>
+                <span id="spinner" class="hidden animate-spin text-blue-600">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </span>
+            </div>
+        </form>
+
+        <p id="statusMsg" class="mt-4 text-sm font-medium text-center min-h-[20px]" aria-live="polite"></p>
+
+        <!-- Recibo / Acuse (Oculto por defecto) -->
+        <div id="recibo" class="hidden mt-8 bg-slate-50 dark:bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-5 relative group">
+           <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 px-3 py-0.5 text-xs font-bold text-slate-500 uppercase tracking-wider border border-slate-200 dark:border-slate-700 rounded-full">Comprobante</div>
+           
+           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-4">
+                <div>
+                    <span class="text-xs text-slate-500 uppercase block">Fecha</span>
+                    <span id="r-fecha" class="font-medium dark:text-slate-200"></span>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-500 uppercase block">Elección ID</span>
+                    <span id="r-eleccion" class="font-medium dark:text-slate-200"></span>
+                </div>
+                <div class="sm:col-span-2 border-t border-slate-200 dark:border-slate-700 pt-2">
+                    <span class="text-xs text-slate-500 uppercase block">Votante</span>
+                    <span id="r-nombre" class="font-medium text-slate-800 dark:text-white"></span>
+                    <span id="r-email" class="text-xs text-slate-500 ml-2"></span>
+                </div>
+                <div class="sm:col-span-2 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                    <span class="text-xs text-blue-600 dark:text-blue-400 uppercase block font-bold">Voto registrado para</span>
+                    <span id="r-candidato" class="font-bold text-blue-800 dark:text-blue-200 text-lg"></span>
+                </div>
+                <div class="sm:col-span-2">
+                    <span class="text-xs text-slate-500 uppercase block">Firma Digital (Hash SHA-256)</span>
+                    <code id="r-hash" class="block font-mono text-[10px] sm:text-xs bg-slate-200 dark:bg-black/30 p-2 rounded text-slate-700 dark:text-slate-300 break-all select-all"></code>
+                </div>
+           </div>
+
+           <div class="flex flex-wrap gap-2 no-print justify-end border-t border-slate-200 dark:border-slate-700 pt-3">
+             <button id="btnCopiar" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">Copiar Hash</button>
+             <a id="btnDescargar" href="#" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">Descargar .txt</a>
+             <button id="btnImprimir" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-800 dark:bg-slate-700 text-white hover:bg-slate-700 transition-colors flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Imprimir
+             </button>
+           </div>
+        </div>
+
+      </div>
+    </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="border-t border-slate-200 dark:border-slate-700">
-    <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
-      <span>© <span id="year"></span> Sistema de Votaciones USTA</span>
-      <a class="hover:underline" href="https://tailwindcss.com/docs" target="_blank" rel="noreferrer">Tailwind Docs</a>
+  <footer class="bg-slate-50 dark:bg-[#0B1120] border-t border-slate-200 dark:border-slate-800 pt-8 pb-6 mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500 dark:text-slate-400">
+      <div class="text-center md:text-left">
+         <span>© <span id="year">2025</span> Universidad Santo Tomás.</span>
+      </div>
+      <div class="flex items-center gap-4">
+         <a href="#" class="hover:text-blue-600 transition-colors">Privacidad</a>
+         <a href="#" class="hover:text-blue-600 transition-colors">Términos</a>
+      </div>
     </div>
   </footer>
 
-  <!-- Lógica principal: importa utilidades desde script.js -->
+  <!-- DIALOGO DE CONFIRMACIÓN -->
+  <dialog id="confirmDlg" class="rounded-2xl p-0 w-full max-w-md backdrop:bg-slate-900/50 dark:backdrop:bg-black/70 open:animate-in open:fade-in open:zoom-in-95 duration-200">
+    <form method="dialog" class="bg-white dark:bg-slate-800 shadow-2xl overflow-hidden">
+      <div class="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 border-b border-blue-100 dark:border-blue-800/50 flex items-center gap-3">
+        <div class="p-2 bg-blue-100 dark:bg-blue-800 rounded-full text-blue-600 dark:text-blue-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="font-bold text-lg text-slate-800 dark:text-white">Confirmar Voto</h3>
+      </div>
+      
+      <div class="px-6 py-6 text-sm text-slate-600 dark:text-slate-300">
+        <p class="mb-4">Por favor verifica que los datos sean correctos. Una vez confirmado, no podrás modificar tu elección.</p>
+        <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-700">
+            <p id="confirmText" class="whitespace-pre-line font-mono text-xs leading-relaxed"></p>
+        </div>
+      </div>
+
+      <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-700">
+        <button value="cancel" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
+        <button id="confirmYes" value="ok" class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-colors">
+          Si, Registrar Voto
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Lógica (SIN CAMBIOS, solo pegada) -->
   <script type="module">
     import { sha256, getVotes, setVotes } from './script.js';
 
     const $ = (sel) => document.querySelector(sel);
-    const voteForm   = $('#voteForm');
-    const statusMsg  = $('#statusMsg');
-    const spinner    = $('#spinner');
-    const confirmDlg = $('#confirmDlg');
-    const confirmText= $('#confirmText');
-    const confirmYes = $('#confirmYes');
-    const lastVoteEl = $('#lastVote');
-    const yearSpan   = $('#year');
+    const voteForm    = $('#voteForm');
+    const statusMsg   = $('#statusMsg');
+    const spinner     = $('#spinner');
+    const confirmDlg  = $('#confirmDlg');
+    const confirmText = $('#confirmText');
+    const confirmYes  = $('#confirmYes');
+    const lastVoteEl  = $('#lastVote');
+    const yearSpan    = $('#year');
 
     const ELECTION_ID = 'CE-2025';
 
@@ -175,7 +293,7 @@
 
     function showStatus(msg, ok=true) {
       statusMsg.textContent = msg;
-      statusMsg.className = 'mt-3 text-sm ' + (ok ? 'text-green-700' : 'text-red-700');
+      statusMsg.className = 'mt-4 text-sm font-medium text-center min-h-[20px] ' + (ok ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
     }
 
     function showLastVote() {
@@ -183,8 +301,8 @@
       const v = vs[vs.length-1];
       if (!v) return;
       lastVoteEl.classList.remove('hidden');
-      const when = new Date(v.ts).toLocaleString();
-      lastVoteEl.textContent = `Último acuse: ${v.hash_anonimo} — ${when}`;
+      lastVoteEl.textContent = `Hash: ${v.hash_anonimo.substring(0, 8)}...`;
+      lastVoteEl.title = `Último hash: ${v.hash_anonimo}`;
     }
     showLastVote();
 
@@ -226,7 +344,7 @@
 
       // Rellenar diálogo de confirmación
       confirmText.textContent =
-        `Confirma tu voto para: ${data.candidato}\n\n` +
+        `CANDIDATO: ${data.candidato}\n\n` +
         `Nombre: ${data.nombre}\n` +
         `Email: ${data.email}\n` +
         `Cédula: ${data.cedula}`;
@@ -235,9 +353,9 @@
       // Confirmación
       confirmYes.onclick = async () => {
         spinner?.classList.remove('hidden');
-        const btn = voteForm.querySelector('button');
-        const t = btn.textContent;
-        btn.disabled = true; btn.textContent = 'Registrando…';
+        const btn = voteForm.querySelector('button[type="submit"]');
+        const t = btn.innerHTML;
+        btn.disabled = true; btn.innerHTML = '<span>Procesando...</span>';
 
         const payload = `${email}|${data.cedula}|${data.candidato}|${ELECTION_ID}|${Date.now()}`;
         const hash = await sha256(payload);
@@ -245,10 +363,10 @@
         votes.push(record);
         setVotes(votes);
 
-        showStatus(`Voto registrado. Acuse: ${hash}`, true);
+        showStatus(`¡Voto registrado correctamente!`, true);
         voteForm.reset();
         spinner?.classList.add('hidden');
-        btn.disabled = false; btn.textContent = t;
+        btn.disabled = false; btn.innerHTML = t;
         confirmDlg.close();
 
         // Mostrar recibo
@@ -260,6 +378,8 @@
         $('#r-candidato').textContent = data.candidato;
         $('#r-hash').textContent      = hash;
         $('#recibo').classList.remove('hidden');
+        // Scroll al recibo suavemente
+        $('#recibo').scrollIntoView({behavior: 'smooth', block: 'nearest'});
 
         // Botones del recibo
         $('#btnImprimir').onclick = () => window.print();
@@ -275,6 +395,7 @@
         const url = URL.createObjectURL(blob);
         const a = $('#btnDescargar');
         a.href = url;
+        a.download = `acuse-voto-${Date.now()}.txt`;
 
         // Actualiza “último acuse”
         showLastVote();
